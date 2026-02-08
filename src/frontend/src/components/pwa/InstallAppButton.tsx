@@ -3,12 +3,16 @@ import { Download, Loader2 } from 'lucide-react';
 import { usePWAInstallPrompt } from '../../hooks/usePWAInstallPrompt';
 
 export default function InstallAppButton() {
-  const { isInstallable, isInstalling, install } = usePWAInstallPrompt();
+  const { shouldShowInstallButton, isInstalling, install } = usePWAInstallPrompt();
 
-  if (!isInstallable) return null;
+  if (!shouldShowInstallButton) return null;
 
   return (
-    <Button onClick={install} disabled={isInstalling} variant="outline" className="w-full">
+    <Button 
+      onClick={install} 
+      disabled={isInstalling} 
+      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg"
+    >
       {isInstalling ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -17,7 +21,7 @@ export default function InstallAppButton() {
       ) : (
         <>
           <Download className="mr-2 h-4 w-4" />
-          Install App
+          Install Bikaner Express App
         </>
       )}
     </Button>

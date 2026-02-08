@@ -1,17 +1,20 @@
 # Specification
 
 ## Summary
-**Goal:** Build a mobile-first PWA delivery app for Bikaner Express Delivery with role-based access (Customer/Rider/Admin), core delivery workflow (orders, assignment, status), photo uploads, and an Android-friendly install experience.
+**Goal:** Add a production-ready Admin Panel at `/admin` with secure username/password login and complete admin capabilities for managing orders, riders, reports, settings/rates, delivery proof enforcement, and WhatsApp deep-link messaging.
 
 **Planned changes:**
-- Implement Internet Identity login with backend-enforced role-based authorization (Customer, Rider, Admin) and role-based routing/route protection.
-- Create backend Order models and APIs for: customer order creation, admin rider assignment, status progression, and role-scoped order retrieval.
-- Build Customer UI with bottom navigation: book delivery (pickup address + optional notes), order confirmation, orders list, and order detail (status + photos).
-- Add parcel photo upload (Customer) and delivery proof photo upload (Rider) with backend storage and role-scoped retrieval; enable Admin viewing of both photo types.
-- Add WhatsApp action on customer order detail to open WhatsApp/WhatsApp Web with a prefilled message (order ID + pickup address) plus a copyable fallback.
-- Build Rider UI with bottom navigation: assigned orders list, order detail, Google Maps navigation action for pickup address, proof photo upload, and mark-delivered status update.
-- Build Admin panel: dashboard overview, orders list/table with status filters, order detail, assign rider from rider list, and view status + uploaded photos.
-- Implement PWA installability: web app manifest, installable icons, and an in-app “Install App” button when the install prompt is available.
-- Apply a consistent Android-inspired, colorful branded theme (no plain white backgrounds) with smooth animations across all role areas; include generated static brand/PWA assets and reference them in UI and manifest.
+- Create a separate Admin authentication flow at `/admin` (username + password), require an active admin session to access any admin screens, and enforce admin-only access in backend APIs.
+- Add backend support for secure admin credential storage (salted+hashed), admin initialization, and server-verified login/logout sessions.
+- Extend orders to support admin manual order creation and additional fields (Customer Name, Mobile Number, Pickup Location, Drop Location, Parcel Description, Payment Type: Cash/Online) while preserving existing customer order creation.
+- Implement admin-controlled order status workflow with labels: New, Assigned, Picked, Delivered (mapped from existing internal status values), with admin status update UI.
+- Add Rider Management in the Admin Panel (add/edit/delete) with fields Name, Phone Number, Vehicle Type (Bike), and use rider records for order assignment (no manual Principal ID in normal flow).
+- Add rider location tracking via an optional stored Google Maps link per rider and render as a clickable “Open in Google Maps” action with an empty state when missing.
+- Enforce delivery proof rules: require a proof photo before an order can be marked Delivered, store an automatic proof upload timestamp, and display photo + timestamp in admin order details.
+- Add Admin Dashboard KPIs: Total Orders (Today/This Month), Pending Deliveries, Completed Deliveries, Active Riders, and Total Earnings (Daily/Monthly).
+- Add Payments & Reports screens for Daily/Weekly/Monthly summaries (including payment type totals and earnings) with exports via CSV download and a print-friendly layout for browser PDF.
+- Add WhatsApp automation as in-app deep links: message rider on assignment and message customer on delivery, with a fallback copy-message flow.
+- Add Admin Settings: editable Company Name, Company Logo upload/update, Contact Numbers, and Rate List Management stored in backend and used for earnings calculations.
+- Ensure the Admin Panel is responsive on mobile/desktop, uses existing brand theme/tokens, and does not break existing Customer and Rider areas; all admin copy in English.
 
-**User-visible outcome:** Users can sign in with Internet Identity as Customer, Rider, or Admin and access a role-specific mobile-first experience: customers book deliveries and track status (with WhatsApp sharing and parcel photos), riders manage assigned orders with navigation and delivery proof, and admins assign riders, track statuses, and view order photos; the app is installable as an Android PWA.
+**User-visible outcome:** Admins can visit `/admin`, log in with username/password, and use a responsive admin interface to manage orders and riders, assign deliveries, enforce delivery-proof requirements, view KPIs and reports with exports, configure settings/rates/logo, and open WhatsApp message links for riders/customers.

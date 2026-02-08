@@ -1,15 +1,23 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 3,
-  "summary": "Mobile-first delivery web app (PWA) for \"Bikaner Express Delivery\" with Customer, Rider, and Admin roles; app-like Android feel with bottom navigation, colorful branded UI, and smooth animations.",
+  "projectStateVersion": 7,
+  "summary": "Mobile-first delivery web app (PWA) for \"Bikaner Express Delivery\" with Customer, Rider, and Admin roles; app-like Android feel with bottom navigation, colorful branded UI, and smooth animations. Admin now requires a fully functional, separate /admin panel with username/password login, dashboards, order & rider management, delivery proof enforcement, payments/reports (PDF/Excel export), WhatsApp automation, and business settings (rates/branding).",
   "architectural_notes": [
     "Build as a mobile-first PWA with Android install prompt/support (web app manifest + service worker).",
     "Role-based access: Customer, Rider, Admin with separate views/permissions.",
-    "Use app-like navigation patterns (bottom nav for primary flows) and branded non-white theme with smooth animations."
+    "Use app-like navigation patterns (bottom nav for primary flows) and branded non-white theme with smooth animations.",
+    "Add a mobile-only floating bottom-right \"Install Bikaner Express App\" CTA that triggers the PWA install prompt (beforeinstallprompt) when available; styled with brand/logo color and smooth animation.",
+    "Ensure PWA manifest configured for app-like full-screen experience (display: standalone/fullscreen), app name \"Bikaner Express Delivery\", and icons set to company logo.",
+    "Provide basic offline access and fast loading via service worker caching strategy; keep push notification capability as a future-ready integration point.",
+    "Add a dedicated Admin web app surface at route /admin with an admin-only auth mechanism separate from Customer/Rider flows.",
+    "Implement server-side credential authentication for Admin (username/password) with secure session/token handling and backend authorization guarding all /admin APIs.",
+    "Enforce business rules in backend: delivery cannot be marked Delivered unless a proof photo is uploaded; store photo metadata including timestamp.",
+    "Plan WhatsApp notifications as an integration point (order assigned -> rider, delivered -> customer); define message templates and triggering events in backend."
   ],
-  "known_issues": [],
+  "known_issues": [
+    "Authentication strategy mismatch: existing plan uses Internet Identity/role-based access, but Admin now requires username/password login at /admin; requires revisiting overall auth architecture."
+  ],
   "isFixRequest": false,
-  "imageRequirements": "## Required Images\n- App icon with stylized courier/parcel monogram for 'Bikaner Express Delivery' (bed-app-icon.dim_512x512.png)\n- App icon (small) matching the main icon style (bed-app-icon.dim_192x192.png)\n- Vertical splash/launch background illustration with warm colorful gradient and subtle parcel/courier motifs (bed-splash.dim_1080x1920.png)\n- Seamless background pattern tile with subtle delivery-themed shapes (bed-bg-tile.dim_512x512.png)",
   "existing_features": [
     {
       "id": "feature-implement-role-based-authentication-for-three-account-types-customer-rider-and-admin-using-internet-identity-for-login-and-backend-enforced-authorization-for-all-privileged-actions",
@@ -80,6 +88,118 @@
       "title": "Generate and include required static brand/PWA assets in the frontend public assets directory, and use them in the UI and PWA manifest (icons/splash/background).",
       "reqIds": [
         "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-existing-pwa-install-cta-to-match-the-required-copy-and-styling-change-the-button-label-to-exactly-install-bikaner-express-app-english-use-a-filled-branded-color-style-matching-the-company-logo-primary-color-and-include-a-smooth-attention-animation-on-appearance-interaction-while-preserving-the-existing-install-loading-state",
+      "title": "Update the existing PWA install CTA to match the required copy and styling: change the button label to exactly \"Install Bikaner Express App\" (English), use a filled/branded color style (matching the company/logo primary color), and include a smooth attention animation on appearance/interaction while preserving the existing install loading state.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-render-the-install-cta-as-a-floating-action-button-fab-fixed-to-the-bottom-right-of-the-viewport-across-the-app-not-only-inside-profile-cards-with-appropriate-spacing-above-any-bottom-navigation-safe-area-and-ensure-it-does-not-block-core-interactions",
+      "title": "Render the install CTA as a floating action button (FAB) fixed to the bottom-right of the viewport across the app (not only inside profile cards), with appropriate spacing above any bottom navigation/safe-area, and ensure it does not block core interactions.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-show-the-floating-install-cta-only-on-mobile-devices-and-only-when-the-pwa-is-actually-installable-additionally-restrict-the-cta-to-android-user-agents-do-not-show-on-desktop-or-ios",
+      "title": "Show the floating install CTA only on mobile devices and only when the PWA is actually installable; additionally, restrict the CTA to Android user agents (do not show on desktop or iOS).",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-separate-admin-authentication-flow-at-url-admin-using-username-password-login-and-gate-all-admin-panel-screens-behind-this-login-so-there-is-no-public-access-to-admin-data-or-actions",
+      "title": "Implement a separate Admin authentication flow at URL `/admin` using username + password login, and gate all Admin Panel screens behind this login so there is no public access to admin data or actions.",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-extend-the-data-model-and-backend-apis-to-support-full-order-management-required-by-the-admin-panel-manual-order-creation-by-admin-and-storing-the-additional-order-fields-customer-name-mobile-number-pickup-location-drop-location-parcel-description-payment-type-cash-online-while-preserving-existing-customer-created-order-functionality",
+      "title": "Extend the data model and backend APIs to support full Order Management required by the admin panel: manual order creation by admin and storing the additional order fields (Customer Name, Mobile Number, Pickup Location, Drop Location, Parcel Description, Payment Type: Cash/Online) while preserving existing customer-created order functionality.",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-the-admin-controlled-order-status-workflow-with-the-exact-statuses-new-assigned-picked-delivered-allow-status-updates-from-the-admin-ui-and-align-existing-status-values-pending-assigned-pickedup-delivered-to-the-requested-labels-in-the-admin-ui",
+      "title": "Implement the admin-controlled order status workflow with the exact statuses: New, Assigned, Picked, Delivered; allow status updates from the Admin UI and align existing status values (`pending/assigned/pickedUp/delivered`) to the requested labels in the Admin UI.",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-rider-management-module-in-the-admin-panel-add-edit-and-delete-riders-with-fields-name-phone-number-vehicle-type-bike-and-use-these-rider-records-for-assignment-instead-of-requiring-manual-principal-id-entry",
+      "title": "Implement a Rider Management module in the Admin Panel: add, edit, and delete riders with fields Name, Phone Number, Vehicle Type (Bike), and use these rider records for assignment instead of requiring manual Principal ID entry.",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-track-rider-location-feature-in-the-admin-panel-by-storing-a-rider-provided-google-maps-link-url-in-the-backend-and-rendering-it-as-a-clickable-link-in-admin-rider-details-and-or-order-details",
+      "title": "Add a 'Track rider location' feature in the Admin Panel by storing a rider-provided Google Maps link (URL) in the backend and rendering it as a clickable link in Admin rider details and/or order details.",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-enforce-the-delivery-proof-system-end-to-end-require-a-delivery-proof-photo-before-an-order-can-be-marked-delivered-and-record-an-automatic-date-time-timestamp-when-the-proof-photo-is-uploaded-show-the-timestamp-in-the-admin-order-detail-view",
+      "title": "Enforce the Delivery Proof System end-to-end: require a delivery proof photo before an order can be marked Delivered, and record an automatic date/time timestamp when the proof photo is uploaded; show the timestamp in the Admin order detail view.",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-admin-dashboard-kpis-required-by-the-business-total-orders-today-this-month-pending-deliveries-completed-deliveries-active-riders-and-total-earnings-daily-monthly",
+      "title": "Implement Admin Dashboard KPIs required by the business: Total Orders (Today/This Month), Pending Deliveries, Completed Deliveries, Active Riders, and Total Earnings (Daily/Monthly).",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-payments-reports-track-cash-on-delivery-vs-online-for-orders-generate-daily-weekly-monthly-report-views-in-the-admin-panel-and-provide-exports-as-1-excel-compatible-csv-and-2-printable-pdf-via-browser-print-to-pdf",
+      "title": "Add Payments & Reports: track Cash on Delivery vs Online for orders, generate Daily/Weekly/Monthly report views in the Admin Panel, and provide exports as (1) Excel-compatible CSV and (2) printable PDF via browser print-to-PDF.",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-whatsapp-automation-as-in-app-deep-links-when-an-order-is-assigned-show-an-admin-action-to-open-whatsapp-with-a-prefilled-message-to-the-rider-s-phone-number-when-an-order-is-delivered-show-an-admin-action-to-open-whatsapp-with-a-prefilled-message-to-the-customer-s-mobile-number",
+      "title": "Add WhatsApp automation as in-app deep links: when an order is assigned, show an Admin action to open WhatsApp with a prefilled message to the rider’s phone number; when an order is delivered, show an Admin action to open WhatsApp with a prefilled message to the customer’s mobile number.",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-admin-settings-editable-company-name-company-logo-and-contact-numbers-plus-rate-list-management-where-admin-can-edit-rates-at-any-time-and-rates-are-stored-in-the-backend-and-used-for-earnings-calculations",
+      "title": "Implement Admin Settings: editable Company Name, Company Logo, and Contact Numbers, plus Rate List Management where admin can edit rates at any time and rates are stored in the backend and used for earnings calculations.",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-admin-panel-ui-is-fully-responsive-for-mobile-and-desktop-uses-the-existing-brand-color-tokens-theme-and-provides-a-clean-professional-admin-layout-navigation-tables-forms-clear-hierarchy-without-breaking-the-existing-customer-and-rider-areas",
+      "title": "Ensure the Admin Panel UI is fully responsive for mobile and desktop, uses the existing brand color tokens/theme, and provides a clean, professional admin layout (navigation, tables/forms, clear hierarchy) without breaking the existing Customer and Rider areas.",
+      "reqIds": [
+        "REQ-26"
       ],
       "version": 1
     }
@@ -186,6 +306,76 @@
       "summary": "Create backend data models and APIs to support deliveries: order creation by customers, assignment to riders by admins, order status progression, and retrieval APIs scoped by role (customer sees their own orders; rider sees assigned orders; admin sees all).",
       "reqIds": [
         "REQ-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-19",
+      "summary": "Android-only in-app PWA install CTA: floating bottom-right \"Install Bikaner Express App\" button (mobile-only) that triggers Add to Home Screen with branded colors and smooth animation; ensure manifest uses app name \"Bikaner Express Delivery\" and company logo icons",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-23",
+      "summary": "Ensure the PWA metadata remains aligned with the requested identity: the web app manifest must keep the app name as \"Bikaner Express Delivery\" and the app icon must remain set to the existing company logo image assets referenced by the manifest.",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-24",
+      "summary": "Separate Admin Panel URL (/admin) with secure username/password login and admin-only access (no public access)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-25",
+      "summary": "Admin Dashboard KPIs: total orders (today/this month), pending/completed deliveries, active riders, total earnings (daily/monthly)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-26",
+      "summary": "Admin Order Management: manually create orders, orders table view, order detail fields (customer name/mobile, pickup/drop, parcel description, payment type), and status workflow (New/Assigned/Picked/Delivered)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-27",
+      "summary": "Admin Rider Management: add/edit/delete riders (name, phone, vehicle type), assign orders to riders, and provide live location tracking via Google Maps link",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-28",
+      "summary": "Delivery proof system: require rider delivery photo with automatic date/time stamp; block marking delivered without photo",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-29",
+      "summary": "Payments & Reports: track Cash on Delivery, generate daily/weekly/monthly reports, export to PDF and Excel",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-30",
+      "summary": "WhatsApp automation: auto message rider when order assigned and auto message customer after delivery",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-31",
+      "summary": "Admin Settings: manage company name/logo/contact numbers and rate list management (admin can edit rates anytime)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-33",
+      "summary": "Add backend support for Admin credential management suitable for production usage: store admin credentials securely (no plaintext passwords), allow initialization of at least one admin account, and support login + logout with server-verified sessions.",
+      "reqIds": [
+        "REQ-16"
       ],
       "status": "pending"
     }

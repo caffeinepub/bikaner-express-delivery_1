@@ -12,32 +12,111 @@ import type { Principal } from '@icp-sdk/core/principal';
 
 export type Address = string;
 export interface CreateOrderArgs {
+  'customerName' : string,
   'deliveryAddress' : Address,
   'parcelPhoto' : [] | [ParcelPhoto],
+  'mobileNumber' : string,
+  'dropLocation' : string,
   'pickupAddress' : Address,
+  'paymentType' : PaymentType,
+  'parcelDescription' : string,
+  'pickupLocation' : string,
 }
 export type CustomerId = Principal;
-export interface DeliveryOrderInternal {
+export interface DeliveryOrder {
   'id' : OrderId,
   'proofPhoto' : [] | [DeliveryProofPhoto],
+  'customerName' : string,
   'status' : OrderStatus,
   'deliveryAddress' : Address,
   'assignedRider' : [] | [RiderId],
   'customer' : CustomerId,
   'parcelPhoto' : [] | [ParcelPhoto],
+  'mobileNumber' : string,
+  'dropLocation' : string,
   'pickupAddress' : Address,
+  'timestamp' : Time,
+  'paymentType' : PaymentType,
+  'parcelDescription' : string,
+  'pickupLocation' : string,
+}
+export interface DeliveryOrderInternal {
+  'id' : OrderId,
+  'proofPhoto' : [] | [DeliveryProofPhoto],
+  'customerName' : string,
+  'status' : OrderStatus,
+  'deliveryAddress' : Address,
+  'assignedRider' : [] | [RiderId],
+  'customer' : CustomerId,
+  'parcelPhoto' : [] | [ParcelPhoto],
+  'mobileNumber' : string,
+  'dropLocation' : string,
+  'pickupAddress' : Address,
+  'timestamp' : Time,
+  'paymentType' : PaymentType,
+  'parcelDescription' : string,
+  'pickupLocation' : string,
 }
 export type DeliveryProofPhoto = Uint8Array;
+export interface FullOrder {
+  'id' : string,
+  'proofPhoto' : [] | [string],
+  'customerName' : string,
+  'status' : OrderStatus,
+  'deliveryAddress' : string,
+  'assignedRider' : Principal,
+  'customer' : Principal,
+  'parcelPhoto' : [] | [ParcelPhoto],
+  'mobileNumber' : string,
+  'dropLocation' : string,
+  'pickupAddress' : string,
+  'timestamp' : Time,
+  'paymentType' : { 'cash' : null } |
+    { 'online' : null },
+  'parcelDescription' : string,
+  'pickupLocation' : string,
+}
+export interface FullOrderWithTimestamp {
+  'id' : string,
+  'proofPhoto' : [] | [DeliveryProofPhoto],
+  'customerName' : string,
+  'status' : OrderStatus,
+  'deliveryAddress' : string,
+  'assignedRider' : Principal,
+  'hasProofPhoto' : boolean,
+  'customer' : Principal,
+  'parcelPhoto' : [] | [ParcelPhoto],
+  'mobileNumber' : string,
+  'dropLocation' : string,
+  'proofPhotoTimestampString' : [] | [string],
+  'pickupAddress' : string,
+  'proofPhotoTimestamp' : [] | [Time],
+  'timestamp' : Time,
+  'paymentType' : { 'cash' : null } |
+    { 'online' : null },
+  'parcelDescription' : string,
+  'pickupLocation' : string,
+}
 export type OrderId = string;
-export type OrderStatus = { 'assigned' : null } |
-  { 'pending' : null } |
-  { 'pickedUp' : null } |
+export type OrderStatus = { 'new' : null } |
+  { 'assigned' : null } |
+  { 'picked' : null } |
   { 'delivered' : null };
 export type ParcelPhoto = Uint8Array;
+export type PaymentType = { 'cash' : null } |
+  { 'online' : null };
 export type RiderId = Principal;
+export interface RiderProfile {
+  'id' : RiderId,
+  'locationUrl' : [] | [string],
+  'vehicleType' : string,
+  'name' : string,
+  'phoneNumber' : string,
+}
 export type Role = { 'admin' : null } |
   { 'customer' : null } |
   { 'rider' : null };
+export type Time = bigint;
 export interface UpdateOrderStatusArgs {
   'status' : OrderStatus,
   'orderId' : OrderId,
@@ -74,14 +153,37 @@ export interface _SERVICE {
   >,
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  'addRider' : ActorMethod<[Principal, string, string, string], boolean>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'assignRider' : ActorMethod<[OrderId, RiderId], undefined>,
+  'assignRiderToOrder' : ActorMethod<
+    [[] | [string], [] | [Principal]],
+    boolean
+  >,
+  'assignRiderToOrderAndReturnRider' : ActorMethod<
+    [[] | [string], [] | [Principal]],
+    [] | [[DeliveryOrderInternal, [] | [RiderProfile]]]
+  >,
   'createOrder' : ActorMethod<[CreateOrderArgs], OrderId>,
+  'createOrderAndReturn' : ActorMethod<[[] | [FullOrder]], boolean>,
+  'getAllAssignedOrders' : ActorMethod<[], Array<DeliveryOrder>>,
+  'getAllDeliveredOrders' : ActorMethod<[], Array<DeliveryOrder>>,
+  'getAllNewOrders' : ActorMethod<[], Array<DeliveryOrder>>,
   'getAllOrders' : ActorMethod<[], Array<DeliveryOrderInternal>>,
+  'getAllPickedOrders' : ActorMethod<[], Array<DeliveryOrder>>,
+  'getAllRiders' : ActorMethod<[], Array<RiderProfile>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getMyOrders' : ActorMethod<[], Array<DeliveryOrderInternal>>,
   'getOrder' : ActorMethod<[OrderId], DeliveryOrderInternal>,
+  'getOrderProofPhotoWithTimestamp' : ActorMethod<
+    [string],
+    [] | [FullOrderWithTimestamp]
+  >,
+  'getOrderWithRiderInfo' : ActorMethod<
+    [string],
+    [] | [{ 'order' : DeliveryOrderInternal, 'rider' : [] | [RiderProfile] }]
+  >,
   'getOrdersByCustomer' : ActorMethod<
     [CustomerId],
     Array<DeliveryOrderInternal>
@@ -94,6 +196,7 @@ export interface _SERVICE {
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
+  'updateRiderLocation' : ActorMethod<[Principal, string], boolean>,
   'updateStatus' : ActorMethod<[UpdateOrderStatusArgs], undefined>,
   'uploadParcelPhoto' : ActorMethod<[OrderId, ParcelPhoto], undefined>,
   'uploadProofPhoto' : ActorMethod<[OrderId, DeliveryProofPhoto], undefined>,

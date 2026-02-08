@@ -9,7 +9,7 @@ export default function RiderShell() {
 
   return (
     <AppSurface>
-      <div className="pb-20">
+      <div className="pb-24">
         {activeTab === 'orders' && <RiderOrdersPage />}
         {activeTab === 'profile' && <RiderProfilePage />}
       </div>

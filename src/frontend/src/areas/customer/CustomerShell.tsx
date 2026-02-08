@@ -11,7 +11,7 @@ export default function CustomerShell() {
 
   return (
     <AppSurface>
-      <div className="pb-20">
+      <div className="pb-24">
         {activeTab === 'book' && <CustomerBookDeliveryPage />}
         {activeTab === 'orders' && <CustomerOrdersPage />}
         {activeTab === 'profile' && <CustomerProfilePage />}

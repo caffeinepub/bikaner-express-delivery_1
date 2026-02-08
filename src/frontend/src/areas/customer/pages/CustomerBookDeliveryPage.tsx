@@ -14,6 +14,9 @@ import { toast } from 'sonner';
 export default function CustomerBookDeliveryPage() {
   const [pickupAddress, setPickupAddress] = useState('');
   const [deliveryAddress, setDeliveryAddress] = useState('');
+  const [customerName, setCustomerName] = useState('');
+  const [mobileNumber, setMobileNumber] = useState('');
+  const [parcelDescription, setParcelDescription] = useState('');
   const [parcelPhoto, setParcelPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [orderCreated, setOrderCreated] = useState(false);
@@ -29,7 +32,10 @@ export default function CustomerBookDeliveryPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!pickupAddress.trim() || !deliveryAddress.trim()) return;
+    if (!pickupAddress.trim() || !deliveryAddress.trim() || !customerName.trim() || !mobileNumber.trim()) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
 
     try {
       let photoBytes: Uint8Array | undefined;
@@ -40,6 +46,12 @@ export default function CustomerBookDeliveryPage() {
       const orderId = await createOrder.mutateAsync({
         pickupAddress: pickupAddress.trim(),
         deliveryAddress: deliveryAddress.trim(),
+        customerName: customerName.trim(),
+        mobileNumber: mobileNumber.trim(),
+        pickupLocation: pickupAddress.trim(),
+        dropLocation: deliveryAddress.trim(),
+        parcelDescription: parcelDescription.trim() || 'No description',
+        paymentType: 'cash',
         parcelPhoto: photoBytes,
       });
 
@@ -50,6 +62,9 @@ export default function CustomerBookDeliveryPage() {
       setTimeout(() => {
         setPickupAddress('');
         setDeliveryAddress('');
+        setCustomerName('');
+        setMobileNumber('');
+        setParcelDescription('');
         setParcelPhoto(null);
         setPhotoPreview(null);
         setOrderCreated(false);
@@ -101,6 +116,31 @@ export default function CustomerBookDeliveryPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="customerName">Your Name *</Label>
+                <Input
+                  id="customerName"
+                  placeholder="Enter your name"
+                  value={customerName}
+                  onChange={(e) => setCustomerName(e.target.value)}
+                  required
+                  disabled={createOrder.isPending}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="mobileNumber">Mobile Number *</Label>
+                <Input
+                  id="mobileNumber"
+                  placeholder="Enter mobile number"
+                  value={mobileNumber}
+                  onChange={(e) => setMobileNumber(e.target.value)}
+                  required
+                  disabled={createOrder.isPending}
+                />
+              </div>
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="pickup">Pickup Address *</Label>
               <Textarea
@@ -128,6 +168,18 @@ export default function CustomerBookDeliveryPage() {
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="parcelDescription">Parcel Description</Label>
+              <Textarea
+                id="parcelDescription"
+                placeholder="Describe the parcel (optional)"
+                value={parcelDescription}
+                onChange={(e) => setParcelDescription(e.target.value)}
+                rows={2}
+                disabled={createOrder.isPending}
+              />
+            </div>
+
+            <div className="space-y-2">
               <Label>Parcel Photo (Optional)</Label>
               <PhotoCapturePicker
                 onPhotoSelected={handlePhotoSelected}
@@ -148,7 +200,7 @@ export default function CustomerBookDeliveryPage() {
             <Button
               type="submit"
               className="w-full h-12"
-              disabled={createOrder.isPending || !pickupAddress.trim() || !deliveryAddress.trim()}
+              disabled={createOrder.isPending || !pickupAddress.trim() || !deliveryAddress.trim() || !customerName.trim() || !mobileNumber.trim()}
             >
               {createOrder.isPending ? (
                 <>

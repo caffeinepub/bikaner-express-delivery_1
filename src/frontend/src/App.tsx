@@ -7,6 +7,7 @@ import CustomerShell from './areas/customer/CustomerShell';
 import RiderShell from './areas/rider/RiderShell';
 import AdminShell from './areas/admin/AdminShell';
 import AccessDeniedScreen from './components/auth/AccessDeniedScreen';
+import FloatingInstallFab from './components/pwa/FloatingInstallFab';
 import { useEffect } from 'react';
 import { registerServiceWorker } from './pwa/registerServiceWorker';
 import { Toaster } from '@/components/ui/sonner';
@@ -17,6 +18,7 @@ const rootRoute = createRootRoute({
   component: () => (
     <>
       <Outlet />
+      <FloatingInstallFab />
       <Toaster />
     </>
   ),
@@ -49,7 +51,7 @@ const riderRoute = createRoute({
   component: RiderShell,
 });
 
-// Admin routes
+// Admin routes - now handles its own auth
 const adminRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/admin',
@@ -95,6 +97,11 @@ function AppContent() {
     if (loginStatus === 'initializing' || profileLoading) return;
 
     const currentPath = window.location.hash.replace('#', '') || '/';
+
+    // Admin route handles its own authentication
+    if (currentPath.startsWith('/admin')) {
+      return;
+    }
 
     if (!isAuthenticated) {
       if (currentPath !== '/' && currentPath !== '') {

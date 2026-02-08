@@ -78,11 +78,33 @@ export default {
                 'accordion-up': {
                     from: { height: 'var(--radix-accordion-content-height)' },
                     to: { height: '0' }
+                },
+                'fab-appear': {
+                    '0%': { 
+                        opacity: '0',
+                        transform: 'scale(0.8) translateY(20px)'
+                    },
+                    '100%': { 
+                        opacity: '1',
+                        transform: 'scale(1) translateY(0)'
+                    }
+                },
+                'fab-pulse': {
+                    '0%, 100%': { 
+                        transform: 'scale(1)',
+                        boxShadow: '0 20px 25px -5px rgba(249, 115, 22, 0.3), 0 8px 10px -6px rgba(249, 115, 22, 0.2)'
+                    },
+                    '50%': { 
+                        transform: 'scale(1.05)',
+                        boxShadow: '0 25px 35px -5px rgba(249, 115, 22, 0.4), 0 10px 15px -6px rgba(249, 115, 22, 0.3)'
+                    }
                 }
             },
             animation: {
                 'accordion-down': 'accordion-down 0.2s ease-out',
-                'accordion-up': 'accordion-up 0.2s ease-out'
+                'accordion-up': 'accordion-up 0.2s ease-out',
+                'fab-appear': 'fab-appear 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                'fab-pulse': 'fab-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
             }
         }
     },

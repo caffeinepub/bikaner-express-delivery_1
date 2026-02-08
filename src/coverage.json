@@ -1,353 +1,252 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-08T05:17:48.628Z",
+  "generatedAt": "2026-02-08T06:57:27.305Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 10,
-    "implemented": 9,
+    "total": 12,
+    "implemented": 11,
     "items": [
       {
-        "id": "REQ-1",
-        "summary": "Implement role-based authentication for three account types: Customer, Rider, and Admin, using Internet Identity for login and backend-enforced authorization for all privileged actions.",
+        "id": "REQ-15",
+        "summary": "Implement a separate Admin authentication flow at URL `/admin` using username + password login, and gate all Admin Panel screens behind this login so there is no public access to admin data or actions.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/App.tsx",
-          "frontend/src/routes/RouteGuards.tsx",
-          "frontend/src/hooks/useCurrentUser.ts",
-          "frontend/src/pages/auth/LoginPage.tsx",
-          "frontend/src/pages/auth/ProfileSetupPage.tsx",
-          "frontend/src/components/auth/AccessDeniedScreen.tsx"
+          "frontend/src/backend.d.ts",
+          "frontend/src/areas/admin/auth/useAdminAuth.ts",
+          "frontend/src/areas/admin/auth/AdminLoginPage.tsx",
+          "frontend/src/areas/admin/auth/AdminGuard.tsx",
+          "frontend/src/areas/admin/AdminShell.tsx",
+          "frontend/src/App.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/App.tsx",
-          "frontend/src/hooks/useCurrentUser.ts",
-          "frontend/src/pages/auth/LoginPage.tsx",
-          "frontend/src/pages/auth/ProfileSetupPage.tsx",
-          "frontend/src/components/auth/AccessDeniedScreen.tsx"
+          "frontend/src/backend.d.ts",
+          "frontend/src/areas/admin/auth/useAdminAuth.ts",
+          "frontend/src/areas/admin/auth/AdminLoginPage.tsx",
+          "frontend/src/areas/admin/AdminShell.tsx",
+          "frontend/src/App.tsx"
         ]
       },
       {
-        "id": "REQ-10",
-        "summary": "Generate and include required static brand/PWA assets in the frontend public assets directory, and use them in the UI and PWA manifest (icons/splash/background).",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/public/assets/generated/bed-app-icon.dim_512x512.png",
-          "frontend/public/assets/generated/bed-app-icon.dim_192x192.png",
-          "frontend/public/assets/generated/bed-splash.dim_1080x1920.png",
-          "frontend/public/assets/generated/bed-bg-tile.dim_512x512.png",
-          "frontend/public/manifest.json",
-          "frontend/src/pages/auth/LoginPage.tsx",
-          "frontend/src/index.css"
-        ],
-        "matchedFiles": [
-          "frontend/public/assets/generated/bed-app-icon.dim_512x512.png",
-          "frontend/public/assets/generated/bed-app-icon.dim_192x192.png",
-          "frontend/public/assets/generated/bed-splash.dim_1080x1920.png",
-          "frontend/public/assets/generated/bed-bg-tile.dim_512x512.png",
-          "frontend/public/manifest.json",
-          "frontend/src/pages/auth/LoginPage.tsx",
-          "frontend/src/index.css"
-        ]
-      },
-      {
-        "id": "REQ-2",
-        "summary": "Create backend data models and APIs to support deliveries: order creation by customers, assignment to riders by admins, order status progression, and retrieval APIs scoped by role (customer sees their own orders; rider sees assigned orders; admin sees all).",
+        "id": "REQ-16",
+        "summary": "Add backend support for Admin credential management suitable for production usage: store admin credentials securely (no plaintext passwords), allow initialization of at least one admin account, and support login + logout with server-verified sessions.",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
       },
       {
-        "id": "REQ-3",
-        "summary": "Build the Customer UI: bottom-navigation, a 'Book Delivery' flow that captures pickup address (and optional notes), order confirmation, order list, and order detail view showing status and any uploaded photos.",
+        "id": "REQ-17",
+        "summary": "Extend the data model and backend APIs to support full Order Management required by the admin panel: manual order creation by admin and storing the additional order fields (Customer Name, Mobile Number, Pickup Location, Drop Location, Parcel Description, Payment Type: Cash/Online) while preserving existing customer-created order functionality.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/areas/customer/CustomerShell.tsx",
-          "frontend/src/areas/customer/components/CustomerBottomNav.tsx",
-          "frontend/src/areas/customer/pages/CustomerBookDeliveryPage.tsx",
-          "frontend/src/areas/customer/pages/CustomerOrdersPage.tsx",
-          "frontend/src/areas/customer/pages/CustomerOrderDetailPage.tsx",
-          "frontend/src/areas/customer/pages/CustomerProfilePage.tsx",
-          "frontend/src/hooks/useOrders.ts",
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/areas/customer/CustomerShell.tsx",
-          "frontend/src/areas/customer/components/CustomerBottomNav.tsx",
-          "frontend/src/areas/customer/pages/CustomerBookDeliveryPage.tsx",
-          "frontend/src/areas/customer/pages/CustomerOrdersPage.tsx",
-          "frontend/src/areas/customer/pages/CustomerOrderDetailPage.tsx",
-          "frontend/src/areas/customer/pages/CustomerProfilePage.tsx",
-          "frontend/src/hooks/useOrders.ts",
-          "frontend/src/App.tsx"
-        ]
-      },
-      {
-        "id": "REQ-4",
-        "summary": "Implement Customer parcel photo upload and Rider delivery proof photo upload, including frontend capture/upload UI and backend storage/retrieval so that Admin can view both photo types per order.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/photos/PhotoCapturePicker.tsx",
-          "frontend/src/utils/fileToBytes.ts",
-          "frontend/src/hooks/usePhotoUploads.ts",
-          "frontend/src/areas/customer/pages/CustomerBookDeliveryPage.tsx",
-          "frontend/src/areas/customer/pages/CustomerOrderDetailPage.tsx",
-          "frontend/src/areas/rider/pages/RiderOrderDetailPage.tsx",
+          "frontend/src/backend.d.ts",
+          "frontend/src/hooks/useAdminOrders.ts",
+          "frontend/src/areas/admin/pages/AdminCreateOrderPage.tsx",
+          "frontend/src/areas/admin/pages/AdminOrdersPage.tsx",
           "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/photos/PhotoCapturePicker.tsx",
-          "frontend/src/utils/fileToBytes.ts",
-          "frontend/src/hooks/usePhotoUploads.ts",
-          "frontend/src/areas/customer/pages/CustomerBookDeliveryPage.tsx",
-          "frontend/src/areas/customer/pages/CustomerOrderDetailPage.tsx",
-          "frontend/src/areas/rider/pages/RiderOrderDetailPage.tsx",
+          "frontend/src/backend.d.ts",
+          "frontend/src/hooks/useAdminOrders.ts",
+          "frontend/src/areas/admin/pages/AdminCreateOrderPage.tsx",
+          "frontend/src/areas/admin/pages/AdminOrdersPage.tsx",
           "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx"
         ]
       },
       {
-        "id": "REQ-5",
-        "summary": "Add WhatsApp integration for customers: provide a WhatsApp action that opens WhatsApp (or WhatsApp Web) with a prefilled message containing the order ID and pickup address.",
+        "id": "REQ-18",
+        "summary": "Implement the admin-controlled order status workflow with the exact statuses: New, Assigned, Picked, Delivered; allow status updates from the Admin UI and align existing status values (`pending/assigned/pickedUp/delivered`) to the requested labels in the Admin UI.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/areas/admin/pages/AdminOrdersPage.tsx",
+          "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
+          "frontend/src/hooks/useAdminOrders.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/areas/admin/pages/AdminOrdersPage.tsx",
+          "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
+          "frontend/src/hooks/useAdminOrders.ts"
+        ]
+      },
+      {
+        "id": "REQ-19",
+        "summary": "Implement a Rider Management module in the Admin Panel: add, edit, and delete riders with fields Name, Phone Number, Vehicle Type (Bike), and use these rider records for assignment instead of requiring manual Principal ID entry.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/backend.d.ts",
+          "frontend/src/hooks/useAdminRiders.ts",
+          "frontend/src/areas/admin/pages/AdminRidersPage.tsx",
+          "frontend/src/hooks/useAdminOrders.ts",
+          "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
+          "frontend/src/areas/admin/AdminShell.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/backend.d.ts",
+          "frontend/src/hooks/useAdminRiders.ts",
+          "frontend/src/areas/admin/pages/AdminRidersPage.tsx",
+          "frontend/src/hooks/useAdminOrders.ts",
+          "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
+          "frontend/src/areas/admin/AdminShell.tsx"
+        ]
+      },
+      {
+        "id": "REQ-20",
+        "summary": "Add a 'Track rider location' feature in the Admin Panel by storing a rider-provided Google Maps link (URL) in the backend and rendering it as a clickable link in Admin rider details and/or order details.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useAdminRiders.ts",
+          "frontend/src/areas/admin/pages/AdminRidersPage.tsx",
+          "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useAdminRiders.ts",
+          "frontend/src/areas/admin/pages/AdminRidersPage.tsx",
+          "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-21",
+        "summary": "Enforce the Delivery Proof System end-to-end: require a delivery proof photo before an order can be marked Delivered, and record an automatic date/time timestamp when the proof photo is uploaded; show the timestamp in the Admin order detail view.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/backend.d.ts",
+          "frontend/src/hooks/useAdminOrders.ts",
+          "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
+          "frontend/src/areas/rider/pages/RiderOrderDetailPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/backend.d.ts",
+          "frontend/src/hooks/useAdminOrders.ts",
+          "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
+          "frontend/src/areas/rider/pages/RiderOrderDetailPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-22",
+        "summary": "Implement Admin Dashboard KPIs required by the business: Total Orders (Today/This Month), Pending Deliveries, Completed Deliveries, Active Riders, and Total Earnings (Daily/Monthly).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/areas/admin/pages/AdminDashboardPage.tsx",
+          "frontend/src/hooks/useAdminOrders.ts",
+          "frontend/src/hooks/useAdminRiders.ts",
+          "frontend/src/utils/adminKpis.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/areas/admin/pages/AdminDashboardPage.tsx",
+          "frontend/src/hooks/useAdminOrders.ts",
+          "frontend/src/hooks/useAdminRiders.ts",
+          "frontend/src/utils/adminKpis.ts"
+        ]
+      },
+      {
+        "id": "REQ-23",
+        "summary": "Add Payments & Reports: track Cash on Delivery vs Online for orders, generate Daily/Weekly/Monthly report views in the Admin Panel, and provide exports as (1) Excel-compatible CSV and (2) printable PDF via browser print-to-PDF.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/areas/admin/pages/AdminReportsPage.tsx",
+          "frontend/src/utils/reporting.ts",
+          "frontend/src/utils/csvExport.ts",
+          "frontend/src/areas/admin/AdminShell.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/areas/admin/pages/AdminReportsPage.tsx",
+          "frontend/src/utils/reporting.ts",
+          "frontend/src/areas/admin/AdminShell.tsx"
+        ]
+      },
+      {
+        "id": "REQ-24",
+        "summary": "Add WhatsApp automation as in-app deep links: when an order is assigned, show an Admin action to open WhatsApp with a prefilled message to the rider’s phone number; when an order is delivered, show an Admin action to open WhatsApp with a prefilled message to the customer’s mobile number.",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/utils/deepLinks.ts",
           "frontend/src/components/actions/WhatsAppOrderAction.tsx",
-          "frontend/src/areas/customer/pages/CustomerOrderDetailPage.tsx"
+          "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx"
         ],
         "matchedFiles": [
           "frontend/src/utils/deepLinks.ts",
-          "frontend/src/components/actions/WhatsAppOrderAction.tsx",
-          "frontend/src/areas/customer/pages/CustomerOrderDetailPage.tsx"
+          "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx"
         ]
       },
       {
-        "id": "REQ-6",
-        "summary": "Build the Rider UI: show assigned orders list, order detail, a navigation action that opens Google Maps directions for the pickup address, proof photo upload, and a 'Mark Delivered' action that updates the backend status.",
+        "id": "REQ-25",
+        "summary": "Implement Admin Settings: editable Company Name, Company Logo, and Contact Numbers, plus Rate List Management where admin can edit rates at any time and rates are stored in the backend and used for earnings calculations.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/areas/rider/RiderShell.tsx",
-          "frontend/src/areas/rider/components/RiderBottomNav.tsx",
-          "frontend/src/areas/rider/pages/RiderOrdersPage.tsx",
-          "frontend/src/areas/rider/pages/RiderOrderDetailPage.tsx",
-          "frontend/src/areas/rider/pages/RiderProfilePage.tsx",
-          "frontend/src/hooks/useRiderActions.ts",
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/areas/rider/RiderShell.tsx",
-          "frontend/src/areas/rider/components/RiderBottomNav.tsx",
-          "frontend/src/areas/rider/pages/RiderOrdersPage.tsx",
-          "frontend/src/areas/rider/pages/RiderOrderDetailPage.tsx",
-          "frontend/src/areas/rider/pages/RiderProfilePage.tsx",
-          "frontend/src/hooks/useRiderActions.ts",
-          "frontend/src/App.tsx"
-        ]
-      },
-      {
-        "id": "REQ-7",
-        "summary": "Build the Admin Panel UI: dashboard overview, orders table/list with filters by status, order detail view, ability to assign a rider to an order, and ability to track status and view uploaded photos.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/areas/admin/AdminShell.tsx",
-          "frontend/src/areas/admin/pages/AdminDashboardPage.tsx",
-          "frontend/src/areas/admin/pages/AdminOrdersPage.tsx",
+          "frontend/src/backend.d.ts",
+          "frontend/src/hooks/useAdminSettings.ts",
+          "frontend/src/areas/admin/pages/AdminSettingsPage.tsx",
           "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
-          "frontend/src/hooks/useAdminOrders.ts",
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/areas/admin/AdminShell.tsx",
-          "frontend/src/areas/admin/pages/AdminDashboardPage.tsx",
-          "frontend/src/areas/admin/pages/AdminOrdersPage.tsx",
-          "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
-          "frontend/src/hooks/useAdminOrders.ts",
-          "frontend/src/App.tsx"
-        ]
-      },
-      {
-        "id": "REQ-8",
-        "summary": "Implement a PWA install experience for Android users, including a web app manifest, installable icons, and an in-app 'Install App' option that appears when installation is available.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/public/manifest.json",
-          "frontend/public/sw.js",
-          "frontend/index.html",
-          "frontend/src/pwa/registerServiceWorker.ts",
-          "frontend/src/hooks/usePWAInstallPrompt.ts",
-          "frontend/src/components/pwa/InstallAppButton.tsx",
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/public/manifest.json",
-          "frontend/public/sw.js",
-          "frontend/index.html",
-          "frontend/src/pwa/registerServiceWorker.ts",
-          "frontend/src/hooks/usePWAInstallPrompt.ts",
-          "frontend/src/components/pwa/InstallAppButton.tsx",
-          "frontend/src/App.tsx"
-        ]
-      },
-      {
-        "id": "REQ-9",
-        "summary": "Apply an app-like, Android-inspired mobile-first visual theme with smooth animations, using a colorful branded palette (no plain white background) and consistent design across Customer, Rider, and Admin areas.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/index.css",
-          "frontend/src/components/layout/AppSurface.tsx",
-          "frontend/src/components/feedback/AnimatedToastRegion.tsx",
-          "frontend/src/areas/customer/CustomerShell.tsx",
-          "frontend/src/areas/rider/RiderShell.tsx",
+          "frontend/src/areas/admin/pages/AdminReportsPage.tsx",
           "frontend/src/areas/admin/AdminShell.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/index.css",
-          "frontend/src/components/layout/AppSurface.tsx",
-          "frontend/src/areas/customer/CustomerShell.tsx",
-          "frontend/src/areas/rider/RiderShell.tsx",
+          "frontend/src/backend.d.ts",
+          "frontend/src/hooks/useAdminSettings.ts",
+          "frontend/src/areas/admin/pages/AdminSettingsPage.tsx",
+          "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
+          "frontend/src/areas/admin/pages/AdminReportsPage.tsx",
           "frontend/src/areas/admin/AdminShell.tsx"
+        ]
+      },
+      {
+        "id": "REQ-26",
+        "summary": "Ensure the Admin Panel UI is fully responsive for mobile and desktop, uses the existing brand color tokens/theme, and provides a clean, professional admin layout (navigation, tables/forms, clear hierarchy) without breaking the existing Customer and Rider areas.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/areas/admin/AdminShell.tsx",
+          "frontend/src/areas/admin/pages/AdminOrdersPage.tsx",
+          "frontend/src/areas/admin/pages/AdminRidersPage.tsx",
+          "frontend/src/areas/admin/pages/AdminReportsPage.tsx",
+          "frontend/src/areas/admin/pages/AdminSettingsPage.tsx",
+          "frontend/src/index.css"
+        ],
+        "matchedFiles": [
+          "frontend/src/areas/admin/AdminShell.tsx",
+          "frontend/src/areas/admin/pages/AdminOrdersPage.tsx",
+          "frontend/src/areas/admin/pages/AdminRidersPage.tsx",
+          "frontend/src/areas/admin/pages/AdminReportsPage.tsx",
+          "frontend/src/areas/admin/pages/AdminSettingsPage.tsx",
+          "frontend/src/index.css"
         ]
       }
     ]
   },
   "changedFiles": [
-    "backend/authorization/MixinAuthorization.mo",
-    "backend/authorization/access-control.mo",
-    "backend/blob-storage/Mixin.mo",
-    "backend/blob-storage/Storage.mo",
     "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
-    "build-template/Dockerfile",
-    "build-template/LICENSE",
-    "build-template/README.md",
-    "build-template/deploy.sh",
-    "build-template/icp.yaml",
-    "build-template/package.json",
-    "build-template/pnpm-lock.yaml",
-    "build-template/pnpm-workspace.yaml",
-    "build-template/scripts/prune-unused-images.js",
-    "build-template/scripts/resize-images.js",
-    "build-template/src/backend/canister.yaml",
-    "build-template/src/backend/system-idl/aaaaa-aa.did",
-    "build-template/src/frontend/canister.yaml",
-    "build-template/src/frontend/components.json",
-    "build-template/src/frontend/env.json",
-    "build-template/src/frontend/eslint-rules/no-bigint-in-query-keys.js",
-    "build-template/src/frontend/eslint-rules/require-internet-identity-provider.js",
-    "build-template/src/frontend/eslint.config.js",
-    "build-template/src/frontend/package.json",
-    "build-template/src/frontend/postcss.config.js",
-    "build-template/src/frontend/src/components/ui/accordion.tsx",
-    "build-template/src/frontend/src/components/ui/alert-dialog.tsx",
-    "build-template/src/frontend/src/components/ui/alert.tsx",
-    "build-template/src/frontend/src/components/ui/aspect-ratio.tsx",
-    "build-template/src/frontend/src/components/ui/avatar.tsx",
-    "build-template/src/frontend/src/components/ui/badge.tsx",
-    "build-template/src/frontend/src/components/ui/breadcrumb.tsx",
-    "build-template/src/frontend/src/components/ui/button.tsx",
-    "build-template/src/frontend/src/components/ui/calendar.tsx",
-    "build-template/src/frontend/src/components/ui/card.tsx",
-    "build-template/src/frontend/src/components/ui/carousel.tsx",
-    "build-template/src/frontend/src/components/ui/chart.tsx",
-    "build-template/src/frontend/src/components/ui/checkbox.tsx",
-    "build-template/src/frontend/src/components/ui/collapsible.tsx",
-    "build-template/src/frontend/src/components/ui/command.tsx",
-    "build-template/src/frontend/src/components/ui/context-menu.tsx",
-    "build-template/src/frontend/src/components/ui/dialog.tsx",
-    "build-template/src/frontend/src/components/ui/drawer.tsx",
-    "build-template/src/frontend/src/components/ui/dropdown-menu.tsx",
-    "build-template/src/frontend/src/components/ui/form.tsx",
-    "build-template/src/frontend/src/components/ui/hover-card.tsx",
-    "build-template/src/frontend/src/components/ui/input-otp.tsx",
-    "build-template/src/frontend/src/components/ui/input.tsx",
-    "build-template/src/frontend/src/components/ui/label.tsx",
-    "build-template/src/frontend/src/components/ui/menubar.tsx",
-    "build-template/src/frontend/src/components/ui/navigation-menu.tsx",
-    "build-template/src/frontend/src/components/ui/pagination.tsx",
-    "build-template/src/frontend/src/components/ui/popover.tsx",
-    "build-template/src/frontend/src/components/ui/progress.tsx",
-    "build-template/src/frontend/src/components/ui/radio-group.tsx",
-    "build-template/src/frontend/src/components/ui/resizable.tsx",
-    "build-template/src/frontend/src/components/ui/scroll-area.tsx",
-    "build-template/src/frontend/src/components/ui/select.tsx",
-    "build-template/src/frontend/src/components/ui/separator.tsx",
-    "build-template/src/frontend/src/components/ui/sheet.tsx",
-    "build-template/src/frontend/src/components/ui/sidebar.tsx",
-    "build-template/src/frontend/src/components/ui/skeleton.tsx",
-    "build-template/src/frontend/src/components/ui/slider.tsx",
-    "build-template/src/frontend/src/components/ui/sonner.tsx",
-    "build-template/src/frontend/src/components/ui/switch.tsx",
-    "build-template/src/frontend/src/components/ui/table.tsx",
-    "build-template/src/frontend/src/components/ui/tabs.tsx",
-    "build-template/src/frontend/src/components/ui/textarea.tsx",
-    "build-template/src/frontend/src/components/ui/toggle-group.tsx",
-    "build-template/src/frontend/src/components/ui/toggle.tsx",
-    "build-template/src/frontend/src/components/ui/tooltip.tsx",
-    "build-template/src/frontend/src/hooks/use-mobile.tsx",
-    "build-template/src/frontend/src/lib/utils.ts",
-    "build-template/src/frontend/tsconfig.json",
-    "build-template/src/frontend/vite.config.js",
-    "build-template/tsconfig.json",
-    "caffeine.lock.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/index.css",
-    "frontend/index.html",
-    "frontend/public/assets/generated/bed-app-icon.dim_192x192.png",
-    "frontend/public/assets/generated/bed-app-icon.dim_512x512.png",
-    "frontend/public/assets/generated/bed-bg-tile.dim_512x512.png",
-    "frontend/public/assets/generated/bed-splash.dim_1080x1920.png",
-    "frontend/public/manifest.json",
-    "frontend/public/sw.js",
     "frontend/src/App.tsx",
     "frontend/src/areas/admin/AdminShell.tsx",
+    "frontend/src/areas/admin/auth/AdminLoginPage.tsx",
+    "frontend/src/areas/admin/auth/useAdminAuth.ts",
+    "frontend/src/areas/admin/pages/AdminCreateOrderPage.tsx",
     "frontend/src/areas/admin/pages/AdminDashboardPage.tsx",
     "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
     "frontend/src/areas/admin/pages/AdminOrdersPage.tsx",
-    "frontend/src/areas/customer/CustomerShell.tsx",
-    "frontend/src/areas/customer/components/CustomerBottomNav.tsx",
+    "frontend/src/areas/admin/pages/AdminReportsPage.tsx",
+    "frontend/src/areas/admin/pages/AdminRidersPage.tsx",
+    "frontend/src/areas/admin/pages/AdminSettingsPage.tsx",
     "frontend/src/areas/customer/pages/CustomerBookDeliveryPage.tsx",
-    "frontend/src/areas/customer/pages/CustomerOrderDetailPage.tsx",
-    "frontend/src/areas/customer/pages/CustomerOrdersPage.tsx",
-    "frontend/src/areas/customer/pages/CustomerProfilePage.tsx",
-    "frontend/src/areas/rider/RiderShell.tsx",
-    "frontend/src/areas/rider/components/RiderBottomNav.tsx",
     "frontend/src/areas/rider/pages/RiderOrderDetailPage.tsx",
-    "frontend/src/areas/rider/pages/RiderOrdersPage.tsx",
-    "frontend/src/areas/rider/pages/RiderProfilePage.tsx",
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
-    "frontend/src/camera/useCamera.ts",
-    "frontend/src/components/actions/WhatsAppOrderAction.tsx",
-    "frontend/src/components/auth/AccessDeniedScreen.tsx",
-    "frontend/src/components/layout/AppSurface.tsx",
-    "frontend/src/components/photos/PhotoCapturePicker.tsx",
-    "frontend/src/components/pwa/InstallAppButton.tsx",
-    "frontend/src/config.ts",
+    "frontend/src/components/actions/WhatsAppMessageDialog.tsx",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useActor.ts",
     "frontend/src/hooks/useAdminOrders.ts",
-    "frontend/src/hooks/useCurrentUser.ts",
-    "frontend/src/hooks/useInternetIdentity.ts",
-    "frontend/src/hooks/useOrders.ts",
-    "frontend/src/hooks/usePWAInstallPrompt.ts",
-    "frontend/src/hooks/usePhotoUploads.ts",
-    "frontend/src/hooks/useRiderActions.ts",
+    "frontend/src/hooks/useAdminRiders.ts",
+    "frontend/src/hooks/useAdminSettings.ts",
     "frontend/src/index.css",
-    "frontend/src/main.tsx",
-    "frontend/src/pages/auth/LoginPage.tsx",
-    "frontend/src/pages/auth/ProfileSetupPage.tsx",
-    "frontend/src/pwa/registerServiceWorker.ts",
-    "frontend/src/ui-summary.json",
-    "frontend/src/utils/StorageClient.ts",
+    "frontend/src/utils/adminKpis.ts",
     "frontend/src/utils/deepLinks.ts",
-    "frontend/src/utils/fileToBytes.ts",
-    "frontend/src/utils/urlParams.ts",
-    "frontend/tailwind.config.js",
+    "frontend/src/utils/reporting.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

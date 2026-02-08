@@ -1,117 +1,127 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-08T05:17:48.625Z",
-  "summary": "Diff adds a new single-actor Motoko backend with orders, roles/profiles, and blob storage mixins, plus new TanStack Router-based frontend areas for Customer/Rider/Admin, WhatsApp deep link action with fallback dialog, and app-surface theming. Several spec details are either not shown or appear incomplete vs the requirements (notably order fields, admin rider selection UX, and route-level access protection).",
+  "generatedAt": "2026-02-08T06:57:27.300Z",
+  "summary": "Diff adds a new /admin area with a localStorage-based username/password login UI, plus admin pages for dashboard, orders, riders, reports, and settings. Backend data model was extended (order fields, statuses, riders, proof timestamps) with a migration module. However, several core requirements—especially backend-enforced admin authentication/sessions, secure credential storage, backend-backed settings/rates, full rider CRUD, delivery-proof timestamp enforcement/display, and rate-based earnings—are not evidenced in the diff summary and appear incomplete or implemented only client-side.",
   "missing_requirements": [
     {
-      "id": "REQ-1",
-      "requirement": "Admin-only screens are not accessible to non-admin users (both via UI navigation and direct route access).",
-      "reason": "Routes for /customer, /rider, and /admin are registered without any visible route guards or role-based loaders; the only logic shown is a redirect on login/profile presence, which does not prevent direct navigation to /admin for an authenticated non-admin.",
+      "id": "REQ-15",
+      "requirement": "Implement a separate Admin authentication flow at URL `/admin` using username + password login, and gate all Admin Panel screens behind this login so there is no public access to admin data or actions; all backend methods for admin-only features validate an admin session and reject unauthenticated callers.",
+      "reason": "Admin UI is gated by a frontend-only localStorage session, but there is no evidence of backend-validated admin session enforcement on admin APIs. Admin data is still fetched via normal actor calls without an admin session token or equivalent.",
       "evidence": [
-        "frontend/src/App.tsx"
+        "frontend/src/areas/admin/auth/useAdminAuth.ts",
+        "frontend/src/areas/admin/AdminShell.tsx",
+        "frontend/src/hooks/useAdminOrders.ts",
+        "frontend/src/hooks/useAdminRiders.ts"
       ]
     },
     {
-      "id": "REQ-2",
-      "requirement": "Order record includes at minimum: orderId, createdAt, customerPrincipal, pickupAddress, optional notes, assignedRiderPrincipal (optional), status, and references to any uploaded photos.",
-      "reason": "The backend order type shown includes id/customer/pickupAddress/deliveryAddress/photos/status/assignedRider but does not show createdAt or optional notes fields, and CreateOrderArgs does not include notes.",
+      "id": "REQ-16",
+      "requirement": "Add backend support for Admin credential management suitable for production usage: store admin credentials securely (no plaintext passwords), allow initialization of at least one admin account, and support login + logout with server-verified sessions.",
+      "reason": "No backend login/logout APIs or secure salted+hashed password storage are evidenced. Instead, credentials are hardcoded in the frontend and verified client-side.",
       "evidence": [
+        "frontend/src/areas/admin/auth/useAdminAuth.ts",
         "backend/main.mo"
       ]
     },
     {
-      "id": "REQ-3",
-      "requirement": "Book Delivery flow captures pickup address and optional notes (and then confirms/creates order).",
-      "reason": "Customer booking UI shown captures pickupAddress and deliveryAddress and supports a parcel photo, but the diff does not show an optional notes field being captured/submitted as required.",
+      "id": "REQ-19",
+      "requirement": "Implement a Rider Management module in the Admin Panel: add, edit, and delete riders with fields Name, Phone Number, Vehicle Type (Bike), and use these rider records for assignment instead of requiring manual Principal ID entry.",
+      "reason": "Rider delete is explicitly not implemented in backend and is stubbed client-side. Also, adding a rider still requires manual Principal ID entry in the UI, contradicting the 'no raw Principal ID required in the normal flow' acceptance criteria.",
       "evidence": [
-        "frontend/src/areas/customer/pages/CustomerBookDeliveryPage.tsx",
-        "backend/main.mo"
+        "frontend/src/hooks/useAdminRiders.ts",
+        "frontend/src/areas/admin/pages/AdminRidersPage.tsx"
       ]
     },
     {
-      "id": "REQ-7",
-      "requirement": "Admin can assign a rider to an order selected from a rider list.",
-      "reason": "Admin order detail uses a free-form riderPrincipal text input rather than a rider list selection UI.",
+      "id": "REQ-21",
+      "requirement": "Enforce the Delivery Proof System end-to-end: require a delivery proof photo before an order can be marked Delivered, record an automatic date/time timestamp when the proof photo is uploaded, and show the timestamp in the Admin order detail view.",
+      "reason": "Backend adds a `proofPhotoTimestamps` map and types include proof timestamp fields, but the diff summary does not show backend logic that writes the timestamp on upload or rejects Delivered transition without proof. Admin order detail view in the diff does not show proof upload timestamp rendering.",
       "evidence": [
+        "backend/main.mo",
+        "backend/migration.mo",
         "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx"
+      ]
+    },
+    {
+      "id": "REQ-22",
+      "requirement": "Implement Admin Dashboard KPIs: Total Orders (Today/This Month), Pending Deliveries, Completed Deliveries, Active Riders, and Total Earnings (Daily/Monthly) derived from stored order charges/earnings data (admin-entered or rate-calculated).",
+      "reason": "Dashboard KPIs exist, but earnings are calculated using a hardcoded `BASE_RATE = 50` rather than stored charges/earnings or backend-configured rates.",
+      "evidence": [
+        "frontend/src/utils/adminKpis.ts",
+        "frontend/src/areas/admin/pages/AdminDashboardPage.tsx"
+      ]
+    },
+    {
+      "id": "REQ-25",
+      "requirement": "Implement Admin Settings editable Company Name, Company Logo, Contact Numbers, plus Rate List Management stored in the backend and used for earnings calculations.",
+      "reason": "Settings/logo/rates are stored in browser localStorage via `useAdminSettings`/`useAdminRates` with no evidence of backend persistence or backend usage for earnings calculations.",
+      "evidence": [
+        "frontend/src/hooks/useAdminSettings.ts",
+        "frontend/src/areas/admin/pages/AdminSettingsPage.tsx",
+        "frontend/src/utils/adminKpis.ts",
+        "frontend/src/utils/reporting.ts"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Added a required deliveryAddress field to orders and the customer booking flow.",
-      "reason": "The BuildRequest/AC for REQ-2/REQ-3 only require pickupAddress (plus optional notes) for order creation; deliveryAddress is not requested.",
+      "description": "Hardcoded admin credentials and purely client-side authentication/session stored in localStorage (username/password constants in frontend).",
+      "reason": "BuildRequest requires production-suitable backend credential storage (salted+hashed) and server-verified sessions; this implementation adds an insecure, frontend-only auth mechanism not requested.",
       "evidence": [
-        "backend/main.mo",
-        "frontend/src/areas/customer/pages/CustomerBookDeliveryPage.tsx"
+        "frontend/src/areas/admin/auth/useAdminAuth.ts"
       ]
     },
     {
-      "description": "Added an extra order status 'pickedUp' and rider action to mark picked up.",
-      "reason": "The requirements only specify a minimal progression example (Created/Assigned/InTransit/Delivered) and explicitly require rider ability to mark Delivered; 'pickedUp' is an unrequested additional state/action.",
+      "description": "Client-side rider deletion stub that does not call the backend (always resolves true).",
+      "reason": "BuildRequest requires backend-enforced rider CRUD; implementing deletion as a no-op client stub is an extra/inaccurate behavior not requested.",
       "evidence": [
-        "backend/main.mo",
-        "frontend/src/areas/rider/pages/RiderOrderDetailPage.tsx"
+        "frontend/src/hooks/useAdminRiders.ts"
       ]
     },
     {
-      "description": "Added 'Built with ❤️ using caffeine.ai' footer with an external link across role shells.",
-      "reason": "Not requested by the BuildRequest and introduces additional branding/external linking; also the heart symbol is non-text decoration in user-facing UI.",
+      "description": "Admin settings, logo storage, and rate list management implemented entirely in localStorage.",
+      "reason": "BuildRequest explicitly requires rates and settings to be stored in the backend and used for earnings calculations; localStorage persistence is an unrequested substitute.",
       "evidence": [
-        "frontend/src/areas/admin/AdminShell.tsx",
-        "frontend/src/areas/customer/pages/CustomerProfilePage.tsx",
-        "frontend/src/areas/rider/pages/RiderProfilePage.tsx"
+        "frontend/src/hooks/useAdminSettings.ts",
+        "frontend/src/areas/admin/pages/AdminSettingsPage.tsx"
+      ]
+    },
+    {
+      "description": "Hardcoded base-rate earnings calculations (₹50) for KPIs and reports.",
+      "reason": "BuildRequest requires earnings/charges to reflect configurable backend rate lists; a fixed constant is an unrequested simplification that diverges from requirements.",
+      "evidence": [
+        "frontend/src/utils/adminKpis.ts",
+        "frontend/src/utils/reporting.ts"
       ]
     }
   ],
   "confidence": 0.72,
   "changed_files": [
-    "all_files_summary.json",
     "backend/main.mo",
+    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/index.css",
-    "frontend/index.html",
-    "frontend/public/manifest.json",
-    "frontend/public/sw.js",
     "frontend/src/App.tsx",
     "frontend/src/areas/admin/AdminShell.tsx",
+    "frontend/src/areas/admin/auth/AdminLoginPage.tsx",
+    "frontend/src/areas/admin/auth/useAdminAuth.ts",
+    "frontend/src/areas/admin/pages/AdminCreateOrderPage.tsx",
     "frontend/src/areas/admin/pages/AdminDashboardPage.tsx",
     "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
     "frontend/src/areas/admin/pages/AdminOrdersPage.tsx",
-    "frontend/src/areas/customer/CustomerShell.tsx",
-    "frontend/src/areas/customer/components/CustomerBottomNav.tsx",
+    "frontend/src/areas/admin/pages/AdminReportsPage.tsx",
+    "frontend/src/areas/admin/pages/AdminRidersPage.tsx",
+    "frontend/src/areas/admin/pages/AdminSettingsPage.tsx",
     "frontend/src/areas/customer/pages/CustomerBookDeliveryPage.tsx",
-    "frontend/src/areas/customer/pages/CustomerOrderDetailPage.tsx",
-    "frontend/src/areas/customer/pages/CustomerOrdersPage.tsx",
-    "frontend/src/areas/customer/pages/CustomerProfilePage.tsx",
-    "frontend/src/areas/rider/RiderShell.tsx",
-    "frontend/src/areas/rider/components/RiderBottomNav.tsx",
     "frontend/src/areas/rider/pages/RiderOrderDetailPage.tsx",
-    "frontend/src/areas/rider/pages/RiderOrdersPage.tsx",
-    "frontend/src/areas/rider/pages/RiderProfilePage.tsx",
-    "frontend/src/components/actions/WhatsAppOrderAction.tsx",
-    "frontend/src/components/auth/AccessDeniedScreen.tsx",
-    "frontend/src/components/layout/AppSurface.tsx",
-    "frontend/src/components/photos/PhotoCapturePicker.tsx",
-    "frontend/src/components/pwa/InstallAppButton.tsx",
-    "frontend/src/hooks/useActor.ts",
+    "frontend/src/components/actions/WhatsAppMessageDialog.tsx",
     "frontend/src/hooks/useAdminOrders.ts",
-    "frontend/src/hooks/useCurrentUser.ts",
-    "frontend/src/hooks/useInternetIdentity.ts",
-    "frontend/src/hooks/useOrders.ts",
-    "frontend/src/hooks/usePWAInstallPrompt.ts",
-    "frontend/src/hooks/usePhotoUploads.ts",
-    "frontend/src/hooks/useRiderActions.ts",
+    "frontend/src/hooks/useAdminRiders.ts",
+    "frontend/src/hooks/useAdminSettings.ts",
     "frontend/src/index.css",
-    "frontend/src/main.tsx",
-    "frontend/src/pages/auth/LoginPage.tsx",
-    "frontend/src/pages/auth/ProfileSetupPage.tsx",
-    "frontend/src/pwa/registerServiceWorker.ts",
+    "frontend/src/utils/adminKpis.ts",
     "frontend/src/utils/deepLinks.ts",
-    "frontend/src/utils/fileToBytes.ts",
-    "frontend/src/utils/urlParams.ts",
-    "frontend/tailwind.config.js",
+    "frontend/src/utils/reporting.ts",
     "project_state.json"
   ]
 }

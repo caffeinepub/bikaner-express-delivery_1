@@ -26,30 +26,89 @@ export const UserRole = IDL.Variant({
 });
 export const OrderId = IDL.Text;
 export const RiderId = IDL.Principal;
-export const Address = IDL.Text;
-export const ParcelPhoto = IDL.Vec(IDL.Nat8);
-export const CreateOrderArgs = IDL.Record({
-  'deliveryAddress' : Address,
-  'parcelPhoto' : IDL.Opt(ParcelPhoto),
-  'pickupAddress' : Address,
-});
 export const DeliveryProofPhoto = IDL.Vec(IDL.Nat8);
 export const OrderStatus = IDL.Variant({
+  'new' : IDL.Null,
   'assigned' : IDL.Null,
-  'pending' : IDL.Null,
-  'pickedUp' : IDL.Null,
+  'picked' : IDL.Null,
   'delivered' : IDL.Null,
 });
+export const Address = IDL.Text;
 export const CustomerId = IDL.Principal;
+export const ParcelPhoto = IDL.Vec(IDL.Nat8);
+export const Time = IDL.Int;
+export const PaymentType = IDL.Variant({
+  'cash' : IDL.Null,
+  'online' : IDL.Null,
+});
 export const DeliveryOrderInternal = IDL.Record({
   'id' : OrderId,
   'proofPhoto' : IDL.Opt(DeliveryProofPhoto),
+  'customerName' : IDL.Text,
   'status' : OrderStatus,
   'deliveryAddress' : Address,
   'assignedRider' : IDL.Opt(RiderId),
   'customer' : CustomerId,
   'parcelPhoto' : IDL.Opt(ParcelPhoto),
+  'mobileNumber' : IDL.Text,
+  'dropLocation' : IDL.Text,
   'pickupAddress' : Address,
+  'timestamp' : Time,
+  'paymentType' : PaymentType,
+  'parcelDescription' : IDL.Text,
+  'pickupLocation' : IDL.Text,
+});
+export const RiderProfile = IDL.Record({
+  'id' : RiderId,
+  'locationUrl' : IDL.Opt(IDL.Text),
+  'vehicleType' : IDL.Text,
+  'name' : IDL.Text,
+  'phoneNumber' : IDL.Text,
+});
+export const CreateOrderArgs = IDL.Record({
+  'customerName' : IDL.Text,
+  'deliveryAddress' : Address,
+  'parcelPhoto' : IDL.Opt(ParcelPhoto),
+  'mobileNumber' : IDL.Text,
+  'dropLocation' : IDL.Text,
+  'pickupAddress' : Address,
+  'paymentType' : PaymentType,
+  'parcelDescription' : IDL.Text,
+  'pickupLocation' : IDL.Text,
+});
+export const FullOrder = IDL.Record({
+  'id' : IDL.Text,
+  'proofPhoto' : IDL.Opt(IDL.Text),
+  'customerName' : IDL.Text,
+  'status' : OrderStatus,
+  'deliveryAddress' : IDL.Text,
+  'assignedRider' : IDL.Principal,
+  'customer' : IDL.Principal,
+  'parcelPhoto' : IDL.Opt(ParcelPhoto),
+  'mobileNumber' : IDL.Text,
+  'dropLocation' : IDL.Text,
+  'pickupAddress' : IDL.Text,
+  'timestamp' : Time,
+  'paymentType' : IDL.Variant({ 'cash' : IDL.Null, 'online' : IDL.Null }),
+  'parcelDescription' : IDL.Text,
+  'pickupLocation' : IDL.Text,
+});
+export const DeliveryOrder = IDL.Record({
+  'id' : OrderId,
+  'proofPhoto' : IDL.Opt(DeliveryProofPhoto),
+  'customerName' : IDL.Text,
+  'status' : OrderStatus,
+  'deliveryAddress' : Address,
+  'assignedRider' : IDL.Opt(RiderId),
+  'customer' : CustomerId,
+  'parcelPhoto' : IDL.Opt(ParcelPhoto),
+  'mobileNumber' : IDL.Text,
+  'dropLocation' : IDL.Text,
+  'pickupAddress' : Address,
+  'timestamp' : Time,
+  'paymentType' : PaymentType,
+  'parcelDescription' : IDL.Text,
+  'pickupLocation' : IDL.Text,
 });
 export const Role = IDL.Variant({
   'admin' : IDL.Null,
@@ -57,6 +116,26 @@ export const Role = IDL.Variant({
   'rider' : IDL.Null,
 });
 export const UserProfile = IDL.Record({ 'name' : IDL.Text, 'role' : Role });
+export const FullOrderWithTimestamp = IDL.Record({
+  'id' : IDL.Text,
+  'proofPhoto' : IDL.Opt(DeliveryProofPhoto),
+  'customerName' : IDL.Text,
+  'status' : OrderStatus,
+  'deliveryAddress' : IDL.Text,
+  'assignedRider' : IDL.Principal,
+  'hasProofPhoto' : IDL.Bool,
+  'customer' : IDL.Principal,
+  'parcelPhoto' : IDL.Opt(ParcelPhoto),
+  'mobileNumber' : IDL.Text,
+  'dropLocation' : IDL.Text,
+  'proofPhotoTimestampString' : IDL.Opt(IDL.Text),
+  'pickupAddress' : IDL.Text,
+  'proofPhotoTimestamp' : IDL.Opt(Time),
+  'timestamp' : Time,
+  'paymentType' : IDL.Variant({ 'cash' : IDL.Null, 'online' : IDL.Null }),
+  'parcelDescription' : IDL.Text,
+  'pickupLocation' : IDL.Text,
+});
 export const UpdateOrderStatusArgs = IDL.Record({
   'status' : OrderStatus,
   'orderId' : OrderId,
@@ -90,14 +169,52 @@ export const idlService = IDL.Service({
     ),
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'addRider' : IDL.Func(
+      [IDL.Principal, IDL.Text, IDL.Text, IDL.Text],
+      [IDL.Bool],
+      [],
+    ),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'assignRider' : IDL.Func([OrderId, RiderId], [], []),
+  'assignRiderToOrder' : IDL.Func(
+      [IDL.Opt(IDL.Text), IDL.Opt(IDL.Principal)],
+      [IDL.Bool],
+      [],
+    ),
+  'assignRiderToOrderAndReturnRider' : IDL.Func(
+      [IDL.Opt(IDL.Text), IDL.Opt(IDL.Principal)],
+      [IDL.Opt(IDL.Tuple(DeliveryOrderInternal, IDL.Opt(RiderProfile)))],
+      [],
+    ),
   'createOrder' : IDL.Func([CreateOrderArgs], [OrderId], []),
+  'createOrderAndReturn' : IDL.Func([IDL.Opt(FullOrder)], [IDL.Bool], []),
+  'getAllAssignedOrders' : IDL.Func([], [IDL.Vec(DeliveryOrder)], ['query']),
+  'getAllDeliveredOrders' : IDL.Func([], [IDL.Vec(DeliveryOrder)], ['query']),
+  'getAllNewOrders' : IDL.Func([], [IDL.Vec(DeliveryOrder)], ['query']),
   'getAllOrders' : IDL.Func([], [IDL.Vec(DeliveryOrderInternal)], ['query']),
+  'getAllPickedOrders' : IDL.Func([], [IDL.Vec(DeliveryOrder)], ['query']),
+  'getAllRiders' : IDL.Func([], [IDL.Vec(RiderProfile)], ['query']),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getMyOrders' : IDL.Func([], [IDL.Vec(DeliveryOrderInternal)], ['query']),
   'getOrder' : IDL.Func([OrderId], [DeliveryOrderInternal], ['query']),
+  'getOrderProofPhotoWithTimestamp' : IDL.Func(
+      [IDL.Text],
+      [IDL.Opt(FullOrderWithTimestamp)],
+      ['query'],
+    ),
+  'getOrderWithRiderInfo' : IDL.Func(
+      [IDL.Text],
+      [
+        IDL.Opt(
+          IDL.Record({
+            'order' : DeliveryOrderInternal,
+            'rider' : IDL.Opt(RiderProfile),
+          })
+        ),
+      ],
+      ['query'],
+    ),
   'getOrdersByCustomer' : IDL.Func(
       [CustomerId],
       [IDL.Vec(DeliveryOrderInternal)],
@@ -120,6 +237,7 @@ export const idlService = IDL.Service({
     ),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+  'updateRiderLocation' : IDL.Func([IDL.Principal, IDL.Text], [IDL.Bool], []),
   'updateStatus' : IDL.Func([UpdateOrderStatusArgs], [], []),
   'uploadParcelPhoto' : IDL.Func([OrderId, ParcelPhoto], [], []),
   'uploadProofPhoto' : IDL.Func([OrderId, DeliveryProofPhoto], [], []),
@@ -146,30 +264,86 @@ export const idlFactory = ({ IDL }) => {
   });
   const OrderId = IDL.Text;
   const RiderId = IDL.Principal;
-  const Address = IDL.Text;
-  const ParcelPhoto = IDL.Vec(IDL.Nat8);
-  const CreateOrderArgs = IDL.Record({
-    'deliveryAddress' : Address,
-    'parcelPhoto' : IDL.Opt(ParcelPhoto),
-    'pickupAddress' : Address,
-  });
   const DeliveryProofPhoto = IDL.Vec(IDL.Nat8);
   const OrderStatus = IDL.Variant({
+    'new' : IDL.Null,
     'assigned' : IDL.Null,
-    'pending' : IDL.Null,
-    'pickedUp' : IDL.Null,
+    'picked' : IDL.Null,
     'delivered' : IDL.Null,
   });
+  const Address = IDL.Text;
   const CustomerId = IDL.Principal;
+  const ParcelPhoto = IDL.Vec(IDL.Nat8);
+  const Time = IDL.Int;
+  const PaymentType = IDL.Variant({ 'cash' : IDL.Null, 'online' : IDL.Null });
   const DeliveryOrderInternal = IDL.Record({
     'id' : OrderId,
     'proofPhoto' : IDL.Opt(DeliveryProofPhoto),
+    'customerName' : IDL.Text,
     'status' : OrderStatus,
     'deliveryAddress' : Address,
     'assignedRider' : IDL.Opt(RiderId),
     'customer' : CustomerId,
     'parcelPhoto' : IDL.Opt(ParcelPhoto),
+    'mobileNumber' : IDL.Text,
+    'dropLocation' : IDL.Text,
     'pickupAddress' : Address,
+    'timestamp' : Time,
+    'paymentType' : PaymentType,
+    'parcelDescription' : IDL.Text,
+    'pickupLocation' : IDL.Text,
+  });
+  const RiderProfile = IDL.Record({
+    'id' : RiderId,
+    'locationUrl' : IDL.Opt(IDL.Text),
+    'vehicleType' : IDL.Text,
+    'name' : IDL.Text,
+    'phoneNumber' : IDL.Text,
+  });
+  const CreateOrderArgs = IDL.Record({
+    'customerName' : IDL.Text,
+    'deliveryAddress' : Address,
+    'parcelPhoto' : IDL.Opt(ParcelPhoto),
+    'mobileNumber' : IDL.Text,
+    'dropLocation' : IDL.Text,
+    'pickupAddress' : Address,
+    'paymentType' : PaymentType,
+    'parcelDescription' : IDL.Text,
+    'pickupLocation' : IDL.Text,
+  });
+  const FullOrder = IDL.Record({
+    'id' : IDL.Text,
+    'proofPhoto' : IDL.Opt(IDL.Text),
+    'customerName' : IDL.Text,
+    'status' : OrderStatus,
+    'deliveryAddress' : IDL.Text,
+    'assignedRider' : IDL.Principal,
+    'customer' : IDL.Principal,
+    'parcelPhoto' : IDL.Opt(ParcelPhoto),
+    'mobileNumber' : IDL.Text,
+    'dropLocation' : IDL.Text,
+    'pickupAddress' : IDL.Text,
+    'timestamp' : Time,
+    'paymentType' : IDL.Variant({ 'cash' : IDL.Null, 'online' : IDL.Null }),
+    'parcelDescription' : IDL.Text,
+    'pickupLocation' : IDL.Text,
+  });
+  const DeliveryOrder = IDL.Record({
+    'id' : OrderId,
+    'proofPhoto' : IDL.Opt(DeliveryProofPhoto),
+    'customerName' : IDL.Text,
+    'status' : OrderStatus,
+    'deliveryAddress' : Address,
+    'assignedRider' : IDL.Opt(RiderId),
+    'customer' : CustomerId,
+    'parcelPhoto' : IDL.Opt(ParcelPhoto),
+    'mobileNumber' : IDL.Text,
+    'dropLocation' : IDL.Text,
+    'pickupAddress' : Address,
+    'timestamp' : Time,
+    'paymentType' : PaymentType,
+    'parcelDescription' : IDL.Text,
+    'pickupLocation' : IDL.Text,
   });
   const Role = IDL.Variant({
     'admin' : IDL.Null,
@@ -177,6 +351,26 @@ export const idlFactory = ({ IDL }) => {
     'rider' : IDL.Null,
   });
   const UserProfile = IDL.Record({ 'name' : IDL.Text, 'role' : Role });
+  const FullOrderWithTimestamp = IDL.Record({
+    'id' : IDL.Text,
+    'proofPhoto' : IDL.Opt(DeliveryProofPhoto),
+    'customerName' : IDL.Text,
+    'status' : OrderStatus,
+    'deliveryAddress' : IDL.Text,
+    'assignedRider' : IDL.Principal,
+    'hasProofPhoto' : IDL.Bool,
+    'customer' : IDL.Principal,
+    'parcelPhoto' : IDL.Opt(ParcelPhoto),
+    'mobileNumber' : IDL.Text,
+    'dropLocation' : IDL.Text,
+    'proofPhotoTimestampString' : IDL.Opt(IDL.Text),
+    'pickupAddress' : IDL.Text,
+    'proofPhotoTimestamp' : IDL.Opt(Time),
+    'timestamp' : Time,
+    'paymentType' : IDL.Variant({ 'cash' : IDL.Null, 'online' : IDL.Null }),
+    'parcelDescription' : IDL.Text,
+    'pickupLocation' : IDL.Text,
+  });
   const UpdateOrderStatusArgs = IDL.Record({
     'status' : OrderStatus,
     'orderId' : OrderId,
@@ -210,14 +404,52 @@ export const idlFactory = ({ IDL }) => {
       ),
     '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'addRider' : IDL.Func(
+        [IDL.Principal, IDL.Text, IDL.Text, IDL.Text],
+        [IDL.Bool],
+        [],
+      ),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'assignRider' : IDL.Func([OrderId, RiderId], [], []),
+    'assignRiderToOrder' : IDL.Func(
+        [IDL.Opt(IDL.Text), IDL.Opt(IDL.Principal)],
+        [IDL.Bool],
+        [],
+      ),
+    'assignRiderToOrderAndReturnRider' : IDL.Func(
+        [IDL.Opt(IDL.Text), IDL.Opt(IDL.Principal)],
+        [IDL.Opt(IDL.Tuple(DeliveryOrderInternal, IDL.Opt(RiderProfile)))],
+        [],
+      ),
     'createOrder' : IDL.Func([CreateOrderArgs], [OrderId], []),
+    'createOrderAndReturn' : IDL.Func([IDL.Opt(FullOrder)], [IDL.Bool], []),
+    'getAllAssignedOrders' : IDL.Func([], [IDL.Vec(DeliveryOrder)], ['query']),
+    'getAllDeliveredOrders' : IDL.Func([], [IDL.Vec(DeliveryOrder)], ['query']),
+    'getAllNewOrders' : IDL.Func([], [IDL.Vec(DeliveryOrder)], ['query']),
     'getAllOrders' : IDL.Func([], [IDL.Vec(DeliveryOrderInternal)], ['query']),
+    'getAllPickedOrders' : IDL.Func([], [IDL.Vec(DeliveryOrder)], ['query']),
+    'getAllRiders' : IDL.Func([], [IDL.Vec(RiderProfile)], ['query']),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getMyOrders' : IDL.Func([], [IDL.Vec(DeliveryOrderInternal)], ['query']),
     'getOrder' : IDL.Func([OrderId], [DeliveryOrderInternal], ['query']),
+    'getOrderProofPhotoWithTimestamp' : IDL.Func(
+        [IDL.Text],
+        [IDL.Opt(FullOrderWithTimestamp)],
+        ['query'],
+      ),
+    'getOrderWithRiderInfo' : IDL.Func(
+        [IDL.Text],
+        [
+          IDL.Opt(
+            IDL.Record({
+              'order' : DeliveryOrderInternal,
+              'rider' : IDL.Opt(RiderProfile),
+            })
+          ),
+        ],
+        ['query'],
+      ),
     'getOrdersByCustomer' : IDL.Func(
         [CustomerId],
         [IDL.Vec(DeliveryOrderInternal)],
@@ -240,6 +472,7 @@ export const idlFactory = ({ IDL }) => {
       ),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+    'updateRiderLocation' : IDL.Func([IDL.Principal, IDL.Text], [IDL.Bool], []),
     'updateStatus' : IDL.Func([UpdateOrderStatusArgs], [], []),
     'uploadParcelPhoto' : IDL.Func([OrderId, ParcelPhoto], [], []),
     'uploadProofPhoto' : IDL.Func([OrderId, DeliveryProofPhoto], [], []),

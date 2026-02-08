@@ -2,142 +2,34 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-implement-role-based-authentication-for-three-account-types-customer-rider-and-admin-using-internet-identity-for-login-and-backend-enforced-authorization-for-all-privileged-actions",
-      "featureTitle": "Implement role-based authentication for three account types: Customer, Rider, and Admin, using Internet Identity for login and backend-enforced authorization for all privileged actions.",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/auth/AccessDeniedScreen.tsx",
-        "frontend/src/hooks/useCurrentUser.ts",
-        "frontend/src/pages/auth/LoginPage.tsx",
-        "frontend/src/pages/auth/ProfileSetupPage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "camera@1.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-1"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-build-the-customer-ui-bottom-navigation-a-book-delivery-flow-that-captures-pickup-address-and-optional-notes-order-confirmation-order-list-and-order-detail-view-showing-status-and-any-uploaded-photos",
-      "featureTitle": "Build the Customer UI: bottom-navigation, a 'Book Delivery' flow that captures pickup address (and optional notes), order confirmation, order list, and order detail view showing status and any uploaded photos.",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/areas/customer/CustomerShell.tsx",
-        "frontend/src/areas/customer/components/CustomerBottomNav.tsx",
-        "frontend/src/areas/customer/pages/CustomerBookDeliveryPage.tsx",
-        "frontend/src/areas/customer/pages/CustomerOrderDetailPage.tsx",
-        "frontend/src/areas/customer/pages/CustomerOrdersPage.tsx",
-        "frontend/src/areas/customer/pages/CustomerProfilePage.tsx",
-        "frontend/src/hooks/useOrders.ts"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "camera@1.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-3"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-customer-parcel-photo-upload-and-rider-delivery-proof-photo-upload-including-frontend-capture-upload-ui-and-backend-storage-retrieval-so-that-admin-can-view-both-photo-types-per-order",
-      "featureTitle": "Implement Customer parcel photo upload and Rider delivery proof photo upload, including frontend capture/upload UI and backend storage/retrieval so that Admin can view both photo types per order.",
-      "files": [
-        "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
-        "frontend/src/areas/customer/pages/CustomerBookDeliveryPage.tsx",
-        "frontend/src/areas/customer/pages/CustomerOrderDetailPage.tsx",
-        "frontend/src/areas/rider/pages/RiderOrderDetailPage.tsx",
-        "frontend/src/components/photos/PhotoCapturePicker.tsx",
-        "frontend/src/hooks/usePhotoUploads.ts",
-        "frontend/src/utils/fileToBytes.ts"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "camera@1.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-4"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-whatsapp-integration-for-customers-provide-a-whatsapp-action-that-opens-whatsapp-or-whatsapp-web-with-a-prefilled-message-containing-the-order-id-and-pickup-address",
-      "featureTitle": "Add WhatsApp integration for customers: provide a WhatsApp action that opens WhatsApp (or WhatsApp Web) with a prefilled message containing the order ID and pickup address.",
-      "files": [
-        "frontend/src/areas/customer/pages/CustomerOrderDetailPage.tsx",
-        "frontend/src/components/actions/WhatsAppOrderAction.tsx",
-        "frontend/src/utils/deepLinks.ts"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "camera@1.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-5"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-build-the-rider-ui-show-assigned-orders-list-order-detail-a-navigation-action-that-opens-google-maps-directions-for-the-pickup-address-proof-photo-upload-and-a-mark-delivered-action-that-updates-the-backend-status",
-      "featureTitle": "Build the Rider UI: show assigned orders list, order detail, a navigation action that opens Google Maps directions for the pickup address, proof photo upload, and a 'Mark Delivered' action that updates the backend status.",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/areas/rider/RiderShell.tsx",
-        "frontend/src/areas/rider/components/RiderBottomNav.tsx",
-        "frontend/src/areas/rider/pages/RiderOrderDetailPage.tsx",
-        "frontend/src/areas/rider/pages/RiderOrdersPage.tsx",
-        "frontend/src/areas/rider/pages/RiderProfilePage.tsx",
-        "frontend/src/hooks/useRiderActions.ts"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "camera@1.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-6"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-build-the-admin-panel-ui-dashboard-overview-orders-table-list-with-filters-by-status-order-detail-view-ability-to-assign-a-rider-to-an-order-and-ability-to-track-status-and-view-uploaded-photos",
-      "featureTitle": "Build the Admin Panel UI: dashboard overview, orders table/list with filters by status, order detail view, ability to assign a rider to an order, and ability to track status and view uploaded photos.",
+      "featureId": "feature-implement-a-separate-admin-authentication-flow-at-url-admin-using-username-password-login-and-gate-all-admin-panel-screens-behind-this-login-so-there-is-no-public-access-to-admin-data-or-actions",
+      "featureTitle": "Implement a separate Admin authentication flow at URL `/admin` using username + password login, and gate all Admin Panel screens behind this login so there is no public access to admin data or actions.",
       "files": [
         "frontend/src/App.tsx",
         "frontend/src/areas/admin/AdminShell.tsx",
-        "frontend/src/areas/admin/pages/AdminDashboardPage.tsx",
+        "frontend/src/areas/admin/auth/AdminLoginPage.tsx",
+        "frontend/src/areas/admin/auth/useAdminAuth.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "camera@1.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-15"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-extend-the-data-model-and-backend-apis-to-support-full-order-management-required-by-the-admin-panel-manual-order-creation-by-admin-and-storing-the-additional-order-fields-customer-name-mobile-number-pickup-location-drop-location-parcel-description-payment-type-cash-online-while-preserving-existing-customer-created-order-functionality",
+      "featureTitle": "Extend the data model and backend APIs to support full Order Management required by the admin panel: manual order creation by admin and storing the additional order fields (Customer Name, Mobile Number, Pickup Location, Drop Location, Parcel Description, Payment Type: Cash/Online) while preserving existing customer-created order functionality.",
+      "files": [
+        "frontend/src/areas/admin/pages/AdminCreateOrderPage.tsx",
         "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
         "frontend/src/areas/admin/pages/AdminOrdersPage.tsx",
         "frontend/src/hooks/useAdminOrders.ts"
@@ -153,21 +45,17 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-7"
+        "REQ-17"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-implement-a-pwa-install-experience-for-android-users-including-a-web-app-manifest-installable-icons-and-an-in-app-install-app-option-that-appears-when-installation-is-available",
-      "featureTitle": "Implement a PWA install experience for Android users, including a web app manifest, installable icons, and an in-app 'Install App' option that appears when installation is available.",
+      "featureId": "feature-implement-the-admin-controlled-order-status-workflow-with-the-exact-statuses-new-assigned-picked-delivered-allow-status-updates-from-the-admin-ui-and-align-existing-status-values-pending-assigned-pickedup-delivered-to-the-requested-labels-in-the-admin-ui",
+      "featureTitle": "Implement the admin-controlled order status workflow with the exact statuses: New, Assigned, Picked, Delivered; allow status updates from the Admin UI and align existing status values (`pending/assigned/pickedUp/delivered`) to the requested labels in the Admin UI.",
       "files": [
-        "frontend/index.html",
-        "frontend/public/manifest.json",
-        "frontend/public/sw.js",
-        "frontend/src/App.tsx",
-        "frontend/src/components/pwa/InstallAppButton.tsx",
-        "frontend/src/hooks/usePWAInstallPrompt.ts",
-        "frontend/src/pwa/registerServiceWorker.ts"
+        "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
+        "frontend/src/areas/admin/pages/AdminOrdersPage.tsx",
+        "frontend/src/hooks/useAdminOrders.ts"
       ],
       "components": [
         "authorization@4.0.0",
@@ -180,18 +68,184 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-8"
+        "REQ-18"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-apply-an-app-like-android-inspired-mobile-first-visual-theme-with-smooth-animations-using-a-colorful-branded-palette-no-plain-white-background-and-consistent-design-across-customer-rider-and-admin-areas",
-      "featureTitle": "Apply an app-like, Android-inspired mobile-first visual theme with smooth animations, using a colorful branded palette (no plain white background) and consistent design across Customer, Rider, and Admin areas.",
+      "featureId": "feature-implement-a-rider-management-module-in-the-admin-panel-add-edit-and-delete-riders-with-fields-name-phone-number-vehicle-type-bike-and-use-these-rider-records-for-assignment-instead-of-requiring-manual-principal-id-entry",
+      "featureTitle": "Implement a Rider Management module in the Admin Panel: add, edit, and delete riders with fields Name, Phone Number, Vehicle Type (Bike), and use these rider records for assignment instead of requiring manual Principal ID entry.",
       "files": [
         "frontend/src/areas/admin/AdminShell.tsx",
-        "frontend/src/areas/customer/CustomerShell.tsx",
-        "frontend/src/areas/rider/RiderShell.tsx",
-        "frontend/src/components/layout/AppSurface.tsx",
+        "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
+        "frontend/src/areas/admin/pages/AdminRidersPage.tsx",
+        "frontend/src/hooks/useAdminOrders.ts",
+        "frontend/src/hooks/useAdminRiders.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "camera@1.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-19"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-track-rider-location-feature-in-the-admin-panel-by-storing-a-rider-provided-google-maps-link-url-in-the-backend-and-rendering-it-as-a-clickable-link-in-admin-rider-details-and-or-order-details",
+      "featureTitle": "Add a 'Track rider location' feature in the Admin Panel by storing a rider-provided Google Maps link (URL) in the backend and rendering it as a clickable link in Admin rider details and/or order details.",
+      "files": [
+        "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
+        "frontend/src/areas/admin/pages/AdminRidersPage.tsx",
+        "frontend/src/hooks/useAdminRiders.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "camera@1.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-20"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-enforce-the-delivery-proof-system-end-to-end-require-a-delivery-proof-photo-before-an-order-can-be-marked-delivered-and-record-an-automatic-date-time-timestamp-when-the-proof-photo-is-uploaded-show-the-timestamp-in-the-admin-order-detail-view",
+      "featureTitle": "Enforce the Delivery Proof System end-to-end: require a delivery proof photo before an order can be marked Delivered, and record an automatic date/time timestamp when the proof photo is uploaded; show the timestamp in the Admin order detail view.",
+      "files": [
+        "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
+        "frontend/src/areas/rider/pages/RiderOrderDetailPage.tsx",
+        "frontend/src/hooks/useAdminOrders.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "camera@1.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-21"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-admin-dashboard-kpis-required-by-the-business-total-orders-today-this-month-pending-deliveries-completed-deliveries-active-riders-and-total-earnings-daily-monthly",
+      "featureTitle": "Implement Admin Dashboard KPIs required by the business: Total Orders (Today/This Month), Pending Deliveries, Completed Deliveries, Active Riders, and Total Earnings (Daily/Monthly).",
+      "files": [
+        "frontend/src/areas/admin/pages/AdminDashboardPage.tsx",
+        "frontend/src/hooks/useAdminOrders.ts",
+        "frontend/src/hooks/useAdminRiders.ts",
+        "frontend/src/utils/adminKpis.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "camera@1.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-22"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-payments-reports-track-cash-on-delivery-vs-online-for-orders-generate-daily-weekly-monthly-report-views-in-the-admin-panel-and-provide-exports-as-1-excel-compatible-csv-and-2-printable-pdf-via-browser-print-to-pdf",
+      "featureTitle": "Add Payments & Reports: track Cash on Delivery vs Online for orders, generate Daily/Weekly/Monthly report views in the Admin Panel, and provide exports as (1) Excel-compatible CSV and (2) printable PDF via browser print-to-PDF.",
+      "files": [
+        "frontend/src/areas/admin/AdminShell.tsx",
+        "frontend/src/areas/admin/pages/AdminReportsPage.tsx",
+        "frontend/src/utils/reporting.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "camera@1.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-23"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-whatsapp-automation-as-in-app-deep-links-when-an-order-is-assigned-show-an-admin-action-to-open-whatsapp-with-a-prefilled-message-to-the-rider-s-phone-number-when-an-order-is-delivered-show-an-admin-action-to-open-whatsapp-with-a-prefilled-message-to-the-customer-s-mobile-number",
+      "featureTitle": "Add WhatsApp automation as in-app deep links: when an order is assigned, show an Admin action to open WhatsApp with a prefilled message to the rider’s phone number; when an order is delivered, show an Admin action to open WhatsApp with a prefilled message to the customer’s mobile number.",
+      "files": [
+        "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
+        "frontend/src/utils/deepLinks.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "camera@1.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-24"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-admin-settings-editable-company-name-company-logo-and-contact-numbers-plus-rate-list-management-where-admin-can-edit-rates-at-any-time-and-rates-are-stored-in-the-backend-and-used-for-earnings-calculations",
+      "featureTitle": "Implement Admin Settings: editable Company Name, Company Logo, and Contact Numbers, plus Rate List Management where admin can edit rates at any time and rates are stored in the backend and used for earnings calculations.",
+      "files": [
+        "frontend/src/areas/admin/AdminShell.tsx",
+        "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
+        "frontend/src/areas/admin/pages/AdminReportsPage.tsx",
+        "frontend/src/areas/admin/pages/AdminSettingsPage.tsx",
+        "frontend/src/hooks/useAdminSettings.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "camera@1.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-25"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-ensure-the-admin-panel-ui-is-fully-responsive-for-mobile-and-desktop-uses-the-existing-brand-color-tokens-theme-and-provides-a-clean-professional-admin-layout-navigation-tables-forms-clear-hierarchy-without-breaking-the-existing-customer-and-rider-areas",
+      "featureTitle": "Ensure the Admin Panel UI is fully responsive for mobile and desktop, uses the existing brand color tokens/theme, and provides a clean, professional admin layout (navigation, tables/forms, clear hierarchy) without breaking the existing Customer and Rider areas.",
+      "files": [
+        "frontend/src/areas/admin/AdminShell.tsx",
+        "frontend/src/areas/admin/pages/AdminOrdersPage.tsx",
+        "frontend/src/areas/admin/pages/AdminReportsPage.tsx",
+        "frontend/src/areas/admin/pages/AdminRidersPage.tsx",
+        "frontend/src/areas/admin/pages/AdminSettingsPage.tsx",
         "frontend/src/index.css"
       ],
       "components": [
@@ -205,30 +259,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-9"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-generate-and-include-required-static-brand-pwa-assets-in-the-frontend-public-assets-directory-and-use-them-in-the-ui-and-pwa-manifest-icons-splash-background",
-      "featureTitle": "Generate and include required static brand/PWA assets in the frontend public assets directory, and use them in the UI and PWA manifest (icons/splash/background).",
-      "files": [
-        "frontend/public/manifest.json",
-        "frontend/src/index.css",
-        "frontend/src/pages/auth/LoginPage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "camera@1.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-10"
+        "REQ-26"
       ],
       "confidence": "high"
     }

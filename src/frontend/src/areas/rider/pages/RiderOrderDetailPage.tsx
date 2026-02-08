@@ -21,7 +21,7 @@ function getStatusColor(status: string) {
   switch (status) {
     case 'assigned':
       return 'bg-blue-500/10 text-blue-500 border-blue-500/20';
-    case 'pickedUp':
+    case 'picked':
       return 'bg-purple-500/10 text-purple-500 border-purple-500/20';
     case 'delivered':
       return 'bg-green-500/10 text-green-500 border-green-500/20';
@@ -34,7 +34,7 @@ function getStatusLabel(status: string) {
   switch (status) {
     case 'assigned':
       return 'Assigned';
-    case 'pickedUp':
+    case 'picked':
       return 'Picked Up';
     case 'delivered':
       return 'Delivered';
@@ -96,7 +96,7 @@ export default function RiderOrderDetailPage({ order, onBack }: RiderOrderDetail
 
   const handlePickup = async () => {
     try {
-      await updateStatus.mutateAsync({ orderId: order.id, status: OrderStatus.pickedUp });
+      await updateStatus.mutateAsync({ orderId: order.id, status: OrderStatus.picked });
       toast.success('Order marked as picked up!');
     } catch (error) {
       console.error('Status update error:', error);
@@ -105,6 +105,11 @@ export default function RiderOrderDetailPage({ order, onBack }: RiderOrderDetail
   };
 
   const handleDeliver = async () => {
+    if (!order.proofPhoto) {
+      toast.error('Please upload delivery proof before marking as delivered');
+      return;
+    }
+    
     try {
       await updateStatus.mutateAsync({ orderId: order.id, status: OrderStatus.delivered });
       toast.success('Order marked as delivered!');
@@ -200,7 +205,7 @@ export default function RiderOrderDetailPage({ order, onBack }: RiderOrderDetail
           </Card>
         )}
 
-        {order.status === 'pickedUp' && (
+        {order.status === 'picked' && (
           <>
             <Card className="border-0 shadow-lg">
               <CardHeader>
