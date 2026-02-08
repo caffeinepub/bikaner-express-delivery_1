@@ -1,0 +1,236 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-implement-role-based-authentication-for-three-account-types-customer-rider-and-admin-using-internet-identity-for-login-and-backend-enforced-authorization-for-all-privileged-actions",
+      "featureTitle": "Implement role-based authentication for three account types: Customer, Rider, and Admin, using Internet Identity for login and backend-enforced authorization for all privileged actions.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/auth/AccessDeniedScreen.tsx",
+        "frontend/src/hooks/useCurrentUser.ts",
+        "frontend/src/pages/auth/LoginPage.tsx",
+        "frontend/src/pages/auth/ProfileSetupPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "camera@1.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-build-the-customer-ui-bottom-navigation-a-book-delivery-flow-that-captures-pickup-address-and-optional-notes-order-confirmation-order-list-and-order-detail-view-showing-status-and-any-uploaded-photos",
+      "featureTitle": "Build the Customer UI: bottom-navigation, a 'Book Delivery' flow that captures pickup address (and optional notes), order confirmation, order list, and order detail view showing status and any uploaded photos.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/areas/customer/CustomerShell.tsx",
+        "frontend/src/areas/customer/components/CustomerBottomNav.tsx",
+        "frontend/src/areas/customer/pages/CustomerBookDeliveryPage.tsx",
+        "frontend/src/areas/customer/pages/CustomerOrderDetailPage.tsx",
+        "frontend/src/areas/customer/pages/CustomerOrdersPage.tsx",
+        "frontend/src/areas/customer/pages/CustomerProfilePage.tsx",
+        "frontend/src/hooks/useOrders.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "camera@1.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-customer-parcel-photo-upload-and-rider-delivery-proof-photo-upload-including-frontend-capture-upload-ui-and-backend-storage-retrieval-so-that-admin-can-view-both-photo-types-per-order",
+      "featureTitle": "Implement Customer parcel photo upload and Rider delivery proof photo upload, including frontend capture/upload UI and backend storage/retrieval so that Admin can view both photo types per order.",
+      "files": [
+        "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
+        "frontend/src/areas/customer/pages/CustomerBookDeliveryPage.tsx",
+        "frontend/src/areas/customer/pages/CustomerOrderDetailPage.tsx",
+        "frontend/src/areas/rider/pages/RiderOrderDetailPage.tsx",
+        "frontend/src/components/photos/PhotoCapturePicker.tsx",
+        "frontend/src/hooks/usePhotoUploads.ts",
+        "frontend/src/utils/fileToBytes.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "camera@1.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-whatsapp-integration-for-customers-provide-a-whatsapp-action-that-opens-whatsapp-or-whatsapp-web-with-a-prefilled-message-containing-the-order-id-and-pickup-address",
+      "featureTitle": "Add WhatsApp integration for customers: provide a WhatsApp action that opens WhatsApp (or WhatsApp Web) with a prefilled message containing the order ID and pickup address.",
+      "files": [
+        "frontend/src/areas/customer/pages/CustomerOrderDetailPage.tsx",
+        "frontend/src/components/actions/WhatsAppOrderAction.tsx",
+        "frontend/src/utils/deepLinks.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "camera@1.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-build-the-rider-ui-show-assigned-orders-list-order-detail-a-navigation-action-that-opens-google-maps-directions-for-the-pickup-address-proof-photo-upload-and-a-mark-delivered-action-that-updates-the-backend-status",
+      "featureTitle": "Build the Rider UI: show assigned orders list, order detail, a navigation action that opens Google Maps directions for the pickup address, proof photo upload, and a 'Mark Delivered' action that updates the backend status.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/areas/rider/RiderShell.tsx",
+        "frontend/src/areas/rider/components/RiderBottomNav.tsx",
+        "frontend/src/areas/rider/pages/RiderOrderDetailPage.tsx",
+        "frontend/src/areas/rider/pages/RiderOrdersPage.tsx",
+        "frontend/src/areas/rider/pages/RiderProfilePage.tsx",
+        "frontend/src/hooks/useRiderActions.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "camera@1.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-build-the-admin-panel-ui-dashboard-overview-orders-table-list-with-filters-by-status-order-detail-view-ability-to-assign-a-rider-to-an-order-and-ability-to-track-status-and-view-uploaded-photos",
+      "featureTitle": "Build the Admin Panel UI: dashboard overview, orders table/list with filters by status, order detail view, ability to assign a rider to an order, and ability to track status and view uploaded photos.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/areas/admin/AdminShell.tsx",
+        "frontend/src/areas/admin/pages/AdminDashboardPage.tsx",
+        "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
+        "frontend/src/areas/admin/pages/AdminOrdersPage.tsx",
+        "frontend/src/hooks/useAdminOrders.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "camera@1.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-7"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-a-pwa-install-experience-for-android-users-including-a-web-app-manifest-installable-icons-and-an-in-app-install-app-option-that-appears-when-installation-is-available",
+      "featureTitle": "Implement a PWA install experience for Android users, including a web app manifest, installable icons, and an in-app 'Install App' option that appears when installation is available.",
+      "files": [
+        "frontend/index.html",
+        "frontend/public/manifest.json",
+        "frontend/public/sw.js",
+        "frontend/src/App.tsx",
+        "frontend/src/components/pwa/InstallAppButton.tsx",
+        "frontend/src/hooks/usePWAInstallPrompt.ts",
+        "frontend/src/pwa/registerServiceWorker.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "camera@1.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-8"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-apply-an-app-like-android-inspired-mobile-first-visual-theme-with-smooth-animations-using-a-colorful-branded-palette-no-plain-white-background-and-consistent-design-across-customer-rider-and-admin-areas",
+      "featureTitle": "Apply an app-like, Android-inspired mobile-first visual theme with smooth animations, using a colorful branded palette (no plain white background) and consistent design across Customer, Rider, and Admin areas.",
+      "files": [
+        "frontend/src/areas/admin/AdminShell.tsx",
+        "frontend/src/areas/customer/CustomerShell.tsx",
+        "frontend/src/areas/rider/RiderShell.tsx",
+        "frontend/src/components/layout/AppSurface.tsx",
+        "frontend/src/index.css"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "camera@1.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-9"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-generate-and-include-required-static-brand-pwa-assets-in-the-frontend-public-assets-directory-and-use-them-in-the-ui-and-pwa-manifest-icons-splash-background",
+      "featureTitle": "Generate and include required static brand/PWA assets in the frontend public assets directory, and use them in the UI and PWA manifest (icons/splash/background).",
+      "files": [
+        "frontend/public/manifest.json",
+        "frontend/src/index.css",
+        "frontend/src/pages/auth/LoginPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "camera@1.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-10"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

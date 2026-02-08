@@ -1,0 +1,117 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-08T05:17:48.625Z",
+  "summary": "Diff adds a new single-actor Motoko backend with orders, roles/profiles, and blob storage mixins, plus new TanStack Router-based frontend areas for Customer/Rider/Admin, WhatsApp deep link action with fallback dialog, and app-surface theming. Several spec details are either not shown or appear incomplete vs the requirements (notably order fields, admin rider selection UX, and route-level access protection).",
+  "missing_requirements": [
+    {
+      "id": "REQ-1",
+      "requirement": "Admin-only screens are not accessible to non-admin users (both via UI navigation and direct route access).",
+      "reason": "Routes for /customer, /rider, and /admin are registered without any visible route guards or role-based loaders; the only logic shown is a redirect on login/profile presence, which does not prevent direct navigation to /admin for an authenticated non-admin.",
+      "evidence": [
+        "frontend/src/App.tsx"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "requirement": "Order record includes at minimum: orderId, createdAt, customerPrincipal, pickupAddress, optional notes, assignedRiderPrincipal (optional), status, and references to any uploaded photos.",
+      "reason": "The backend order type shown includes id/customer/pickupAddress/deliveryAddress/photos/status/assignedRider but does not show createdAt or optional notes fields, and CreateOrderArgs does not include notes.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "requirement": "Book Delivery flow captures pickup address and optional notes (and then confirms/creates order).",
+      "reason": "Customer booking UI shown captures pickupAddress and deliveryAddress and supports a parcel photo, but the diff does not show an optional notes field being captured/submitted as required.",
+      "evidence": [
+        "frontend/src/areas/customer/pages/CustomerBookDeliveryPage.tsx",
+        "backend/main.mo"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "requirement": "Admin can assign a rider to an order selected from a rider list.",
+      "reason": "Admin order detail uses a free-form riderPrincipal text input rather than a rider list selection UI.",
+      "evidence": [
+        "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "Added a required deliveryAddress field to orders and the customer booking flow.",
+      "reason": "The BuildRequest/AC for REQ-2/REQ-3 only require pickupAddress (plus optional notes) for order creation; deliveryAddress is not requested.",
+      "evidence": [
+        "backend/main.mo",
+        "frontend/src/areas/customer/pages/CustomerBookDeliveryPage.tsx"
+      ]
+    },
+    {
+      "description": "Added an extra order status 'pickedUp' and rider action to mark picked up.",
+      "reason": "The requirements only specify a minimal progression example (Created/Assigned/InTransit/Delivered) and explicitly require rider ability to mark Delivered; 'pickedUp' is an unrequested additional state/action.",
+      "evidence": [
+        "backend/main.mo",
+        "frontend/src/areas/rider/pages/RiderOrderDetailPage.tsx"
+      ]
+    },
+    {
+      "description": "Added 'Built with ❤️ using caffeine.ai' footer with an external link across role shells.",
+      "reason": "Not requested by the BuildRequest and introduces additional branding/external linking; also the heart symbol is non-text decoration in user-facing UI.",
+      "evidence": [
+        "frontend/src/areas/admin/AdminShell.tsx",
+        "frontend/src/areas/customer/pages/CustomerProfilePage.tsx",
+        "frontend/src/areas/rider/pages/RiderProfilePage.tsx"
+      ]
+    }
+  ],
+  "confidence": 0.72,
+  "changed_files": [
+    "all_files_summary.json",
+    "backend/main.mo",
+    "frontend-file-summaries.txt",
+    "frontend/index.css",
+    "frontend/index.html",
+    "frontend/public/manifest.json",
+    "frontend/public/sw.js",
+    "frontend/src/App.tsx",
+    "frontend/src/areas/admin/AdminShell.tsx",
+    "frontend/src/areas/admin/pages/AdminDashboardPage.tsx",
+    "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
+    "frontend/src/areas/admin/pages/AdminOrdersPage.tsx",
+    "frontend/src/areas/customer/CustomerShell.tsx",
+    "frontend/src/areas/customer/components/CustomerBottomNav.tsx",
+    "frontend/src/areas/customer/pages/CustomerBookDeliveryPage.tsx",
+    "frontend/src/areas/customer/pages/CustomerOrderDetailPage.tsx",
+    "frontend/src/areas/customer/pages/CustomerOrdersPage.tsx",
+    "frontend/src/areas/customer/pages/CustomerProfilePage.tsx",
+    "frontend/src/areas/rider/RiderShell.tsx",
+    "frontend/src/areas/rider/components/RiderBottomNav.tsx",
+    "frontend/src/areas/rider/pages/RiderOrderDetailPage.tsx",
+    "frontend/src/areas/rider/pages/RiderOrdersPage.tsx",
+    "frontend/src/areas/rider/pages/RiderProfilePage.tsx",
+    "frontend/src/components/actions/WhatsAppOrderAction.tsx",
+    "frontend/src/components/auth/AccessDeniedScreen.tsx",
+    "frontend/src/components/layout/AppSurface.tsx",
+    "frontend/src/components/photos/PhotoCapturePicker.tsx",
+    "frontend/src/components/pwa/InstallAppButton.tsx",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useAdminOrders.ts",
+    "frontend/src/hooks/useCurrentUser.ts",
+    "frontend/src/hooks/useInternetIdentity.ts",
+    "frontend/src/hooks/useOrders.ts",
+    "frontend/src/hooks/usePWAInstallPrompt.ts",
+    "frontend/src/hooks/usePhotoUploads.ts",
+    "frontend/src/hooks/useRiderActions.ts",
+    "frontend/src/index.css",
+    "frontend/src/main.tsx",
+    "frontend/src/pages/auth/LoginPage.tsx",
+    "frontend/src/pages/auth/ProfileSetupPage.tsx",
+    "frontend/src/pwa/registerServiceWorker.ts",
+    "frontend/src/utils/deepLinks.ts",
+    "frontend/src/utils/fileToBytes.ts",
+    "frontend/src/utils/urlParams.ts",
+    "frontend/tailwind.config.js",
+    "project_state.json"
+  ]
+}

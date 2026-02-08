@@ -1,0 +1,237 @@
+{
+  "kind": "build_request",
+  "title": "Mobile-first PWA delivery app for Bikaner Express Delivery (Customer/Rider/Admin)",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Implement role-based authentication for three account types: Customer, Rider, and Admin, using Internet Identity for login and backend-enforced authorization for all privileged actions.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "FEATURES:\n- User Login (Customer)\n- Rider Login\n- Admin Panel"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Users can sign in via Internet Identity and are associated with exactly one role: Customer, Rider, or Admin.",
+        "Backend rejects calls that require a role when the caller is unauthenticated or has the wrong role.",
+        "Frontend shows a dedicated login/role selection entry flow and routes users to the correct area after login.",
+        "Admin-only screens are not accessible to non-admin users (both via UI navigation and direct route access)."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Create backend data models and APIs to support deliveries: order creation by customers, assignment to riders by admins, order status progression, and retrieval APIs scoped by role (customer sees their own orders; rider sees assigned orders; admin sees all).",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "CUSTOMER:\n- Book delivery\n- Send pickup address\n\nRIDER:\n- View assigned orders\n- Mark order delivered\n\nADMIN:\n- Assign riders\n- Track order status"
+        ]
+      },
+      "acceptanceCriteria": [
+        "An Order record includes at minimum: orderId, createdAt, customerPrincipal, pickupAddress (text), optional notes, assignedRiderPrincipal (optional), status (e.g., Created/Assigned/InTransit/Delivered), and references to any uploaded photos.",
+        "Customer can create an order with pickup address and optional notes.",
+        "Admin can assign a rider to an order and update status as needed for workflow management.",
+        "Rider can fetch only their assigned orders and update status to Delivered.",
+        "Customer can fetch only their own orders and see current status."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Build the Customer UI: bottom-navigation, a 'Book Delivery' flow that captures pickup address (and optional notes), order confirmation, order list, and order detail view showing status and any uploaded photos.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "CUSTOMER:\n- Book delivery\n- Send pickup address\n- Upload parcel photo\n\nDESIGN:\n- Bottom navigation bar\n\nIMPORTANT:\n- Mobile-first"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Customer area is mobile-first and uses a bottom navigation bar for primary sections (e.g., Home/Book, Orders, Profile).",
+        "Customer can submit a pickup address and create an order successfully; created order appears in their order list.",
+        "Customer can view an order detail screen that clearly displays current status and key order information.",
+        "All customer-facing text is in English."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Implement Customer parcel photo upload and Rider delivery proof photo upload, including frontend capture/upload UI and backend storage/retrieval so that Admin can view both photo types per order.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "CUSTOMER:\n- Upload parcel photo\n\nRIDER:\n- Upload delivery proof photo\n\nADMIN:\n- View uploaded photos"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Customer can attach a parcel photo to an order from mobile (file picker and/or camera when supported by the browser).",
+        "Rider can attach a delivery proof photo to an assigned order.",
+        "Backend stores photo data and associates it with the correct order and photo type (parcel vs delivery proof).",
+        "Admin can view both parcel and delivery proof photos for an order in the admin UI.",
+        "Non-admin users cannot access photos that are not related to their role/scoped orders (e.g., a customer cannot access another customer’s order photos)."
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Add WhatsApp integration for customers: provide a WhatsApp action that opens WhatsApp (or WhatsApp Web) with a prefilled message containing the order ID and pickup address.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "CUSTOMER:\n- WhatsApp integration"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Customer order detail includes a WhatsApp button/action.",
+        "Clicking the action opens a wa.me (or equivalent) link with a prefilled English message that includes the order ID and pickup address.",
+        "If WhatsApp cannot be opened, the UI provides a clear fallback (e.g., shows the message text and allows copying)."
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Build the Rider UI: show assigned orders list, order detail, a navigation action that opens Google Maps directions for the pickup address, proof photo upload, and a 'Mark Delivered' action that updates the backend status.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "RIDER:\n- View assigned orders\n- Google Maps navigation\n- Upload delivery proof photo\n- Mark order delivered"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Rider area is mobile-first and uses a bottom navigation bar for rider primary sections (e.g., Orders, Profile).",
+        "Rider sees only orders assigned to them.",
+        "Order detail includes a 'Navigate' action that opens Google Maps directions using the pickup address.",
+        "Rider can mark an order as Delivered; status updates are persisted and reflected in rider and admin views.",
+        "Rider can upload delivery proof photo from the order detail screen."
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Build the Admin Panel UI: dashboard overview, orders table/list with filters by status, order detail view, ability to assign a rider to an order, and ability to track status and view uploaded photos.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "ADMIN:\n- Dashboard\n- Assign riders\n- Track order status\n- View uploaded photos"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Admin can view an orders list with at least status and assignment visibility.",
+        "Admin can open an order detail and assign a rider (selected from a rider list).",
+        "Admin can see current status and status history or current status changes reflected immediately after updates.",
+        "Admin can view parcel and delivery proof photos for an order.",
+        "Non-admin users cannot access admin APIs or admin pages."
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Implement a PWA install experience for Android users, including a web app manifest, installable icons, and an in-app 'Install App' option that appears when installation is available.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "IMPORTANT:\n- Add \"Install App\" option for Android users\""
+        ]
+      },
+      "acceptanceCriteria": [
+        "App includes a valid web app manifest configured for installability (name, short_name, icons, start_url, display).",
+        "An 'Install App' button is shown when the browser provides an install prompt (e.g., Android Chrome beforeinstallprompt).",
+        "Tapping 'Install App' triggers the install prompt and handles accepted/dismissed states gracefully.",
+        "After installation, the app launches in standalone/app-like display mode."
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "text": "Apply an app-like, Android-inspired mobile-first visual theme with smooth animations, using a colorful branded palette (no plain white background) and consistent design across Customer, Rider, and Admin areas.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "DESIGN:\n- App-like UI\n- Bottom navigation bar\n- Colorful UI using company logo colors\n- No simple white background\n- Smooth animations"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Screens use a cohesive theme (color palette, typography, surfaces) and avoid plain white backgrounds (use colored/gradient surfaces).",
+        "Bottom navigation is visually consistent and feels like a native Android app pattern.",
+        "Common interactions (screen transitions, expanding sections, success toasts) include smooth, subtle animations.",
+        "Design is consistently applied across all role areas without introducing new product features."
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "text": "Generate and include required static brand/PWA assets in the frontend public assets directory, and use them in the UI and PWA manifest (icons/splash/background).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "Colorful UI using company logo colors",
+          "Add \"Install App\" option for Android users"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Generated images are added as static files under frontend/public/assets/generated and referenced by the app (e.g., manifest icons, optional splash/branding usage).",
+        "PWA manifest references the generated icon files.",
+        "App uses the generated branding assets in at least one visible place (e.g., login header/loader/splash panel) without relying on the backend to serve images."
+      ]
+    }
+  ],
+  "constraints": [
+    "Backend must remain a single Motoko actor (no multi-canister or microservices).",
+    "Do not edit files under frontend/src/components/ui (compose them instead).",
+    "Do not edit immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui.",
+    "Only Internet Identity is allowed for authentication (no third-party OAuth providers).",
+    "No external databases or third-party realtime systems (no WebSockets/push).",
+    "All user-facing text must be in English."
+  ],
+  "nonGoals": [
+    "Live GPS tracking on a map inside the app (beyond opening Google Maps for navigation).",
+    "Payments, invoicing, or pricing calculations.",
+    "SMS, email, or push notification integrations.",
+    "Public marketing website or SEO-focused landing pages."
+  ],
+  "imageRequirements": {
+    "required": [
+      "App icon with stylized courier/parcel monogram for 'Bikaner Express Delivery' (bed-app-icon.dim_512x512.png)",
+      "App icon (small) matching the main icon style (bed-app-icon.dim_192x192.png)",
+      "Vertical splash/launch background illustration with warm colorful gradient and subtle parcel/courier motifs (bed-splash.dim_1080x1920.png)",
+      "Seamless background pattern tile with subtle delivery-themed shapes (bed-bg-tile.dim_512x512.png)"
+    ],
+    "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [
+      "Build a mobile-first PWA delivery app for Bikaner Express Delivery with Customer, Rider, and Admin roles."
+    ],
+    "goalsToRemove": [],
+    "preferencesToAdd": [
+      "App-like Android feel with bottom navigation, colorful branded theme, no plain white background, smooth animations."
+    ],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
+  }
+}

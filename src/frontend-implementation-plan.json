@@ -1,0 +1,401 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Bikaner Express Delivery — Mobile-first PWA (Customer/Rider/Admin) Frontend",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Add Internet Identity login with role selection and route guarding for Customer/Rider/Admin areas, enforcing role-based UI access and handling unauthorized errors gracefully.",
+      "acceptanceCriteria": [
+        "Users can sign in via Internet Identity and are associated with exactly one role: Customer, Rider, or Admin.",
+        "Backend rejects calls that require a role when the caller is unauthenticated or has the wrong role.",
+        "Frontend shows a dedicated login/role selection entry flow and routes users to the correct area after login.",
+        "Admin-only screens are not accessible to non-admin users (both via UI navigation and direct route access)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "create",
+          "description": "Create the app router and top-level layout: public login entry flow, guarded role areas (Customer/Rider/Admin), and a not-found route. Implement route guards that rely on Internet Identity state + backend role/profile reads and redirect to the correct area after login. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/routes/RouteGuards.tsx",
+          "operation": "create",
+          "description": "Add guard components for authenticated-only access and role-based access (customer/rider/admin) that also protect direct route navigation (not just nav links). Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useCurrentUser.ts",
+          "operation": "create",
+          "description": "Create React Query hooks to fetch and cache current user profile and caller role/admin status from the backend actor, and to clear cached app data on logout. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/auth/LoginPage.tsx",
+          "operation": "create",
+          "description": "Build the dedicated login/entry screen using the immutable useInternetIdentity hook, including loading/error states and a clear logout action that also clears React Query cache. All text in English. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/auth/ProfileSetupPage.tsx",
+          "operation": "create",
+          "description": "Create first-login profile setup screen prompting for name and a single app role (Customer/Rider). Gate showing Admin as an option behind backend admin check to avoid elevating privileges via UI. Persist via saveCallerUserProfile and route to the correct area. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/auth/AccessDeniedScreen.tsx",
+          "operation": "create",
+          "description": "Create a reusable access denied screen for unauthorized access attempts (e.g., non-admin opening admin routes), with a clear action to go back or logout. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Build the Customer mobile-first UI with bottom navigation, book delivery form (pickup + optional notes), order confirmation, order list, and order detail (status + photos).",
+      "acceptanceCriteria": [
+        "Customer area is mobile-first and uses a bottom navigation bar for primary sections (e.g., Home/Book, Orders, Profile).",
+        "Customer can submit a pickup address and create an order successfully; created order appears in their order list.",
+        "Customer can view an order detail screen that clearly displays current status and key order information.",
+        "All customer-facing text is in English."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/areas/customer/CustomerShell.tsx",
+          "operation": "create",
+          "description": "Create the Customer area shell with mobile-first layout and a consistent bottom navigation wrapper for required sections. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/areas/customer/components/CustomerBottomNav.tsx",
+          "operation": "create",
+          "description": "Implement a customer bottom navigation bar (Home/Book, Orders, Profile) with active state styling and app-like feel. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/areas/customer/pages/CustomerBookDeliveryPage.tsx",
+          "operation": "create",
+          "description": "Implement the 'Book Delivery' flow UI: pickup address + optional notes, submission to backend createOrder, and success/confirmation UI state. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/areas/customer/pages/CustomerOrdersPage.tsx",
+          "operation": "create",
+          "description": "Implement customer orders list using role-scoped backend reads (e.g., getMyOrders), with clear status display and tap-through to detail. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/areas/customer/pages/CustomerOrderDetailPage.tsx",
+          "operation": "create",
+          "description": "Implement customer order detail view: status, pickup address, notes, and display of any uploaded parcel photo/proof photo when present (convert byte arrays to viewable image URLs). Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/areas/customer/pages/CustomerProfilePage.tsx",
+          "operation": "create",
+          "description": "Implement a simple customer profile page showing the saved profile name/role and logout. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useOrders.ts",
+          "operation": "create",
+          "description": "Add React Query hooks for customer order creation and fetching, including cache invalidation after create so the new order appears in the list. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire CustomerShell and customer routes (Book, Orders list, Order detail, Profile) into the router under a customer-only guarded path. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Add parcel photo upload for customers and delivery proof photo upload for riders, with mobile capture/picker UI and viewing of both photo types (admin can view per order).",
+      "acceptanceCriteria": [
+        "Customer can attach a parcel photo to an order from mobile (file picker and/or camera when supported by the browser).",
+        "Rider can attach a delivery proof photo to an assigned order.",
+        "Backend stores photo data and associates it with the correct order and photo type (parcel vs delivery proof).",
+        "Admin can view both parcel and delivery proof photos for an order in the admin UI.",
+        "Non-admin users cannot access photos that are not related to their role/scoped orders (e.g., a customer cannot access another customer’s order photos)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/photos/PhotoCapturePicker.tsx",
+          "operation": "create",
+          "description": "Create a reusable photo input component that supports file picking and an optional in-app camera capture flow. Use the selected camera hook (camera/useCamera.ts) for preview + capture UI where supported. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/utils/fileToBytes.ts",
+          "operation": "create",
+          "description": "Add utilities to convert File/Blob objects into Uint8Array for upload calls, and to safely create/revoke object URLs for displaying returned byte arrays as images. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/usePhotoUploads.ts",
+          "operation": "create",
+          "description": "Add React Query mutations for uploadParcelPhoto and uploadProofPhoto, including progress/disabled states and invalidating the related order query after upload. If backend later returns blob-storage ExternalBlob URLs, prefer using direct URLs for rendering; otherwise fall back to object URLs from byte arrays. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/areas/customer/pages/CustomerBookDeliveryPage.tsx",
+          "operation": "modify",
+          "description": "Extend the customer booking flow to optionally capture/select a parcel photo and upload it for the created order (either as part of the flow or immediately after creation). Use PhotoCapturePicker and ensure mobile-first ergonomics. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/areas/customer/pages/CustomerOrderDetailPage.tsx",
+          "operation": "modify",
+          "description": "Display parcel photo and delivery proof photo (if present) in the customer order detail, scoped to the customer’s own orders via guarded access and role-scoped queries. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/areas/rider/pages/RiderOrderDetailPage.tsx",
+          "operation": "modify",
+          "description": "Add delivery proof upload UI to rider order detail using PhotoCapturePicker and uploadProofPhoto mutation; ensure clear success/error feedback and disabled states while uploading. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
+          "operation": "modify",
+          "description": "Add photo viewing section in admin order detail for both parcel and proof photos (render from byte arrays now; prefer blob-storage direct URLs if/when available). Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Add WhatsApp integration from Customer order detail with prefilled message and a copyable fallback when WhatsApp cannot be opened.",
+      "acceptanceCriteria": [
+        "Customer order detail includes a WhatsApp button/action.",
+        "Clicking the action opens a wa.me (or equivalent) link with a prefilled English message that includes the order ID and pickup address.",
+        "If WhatsApp cannot be opened, the UI provides a clear fallback (e.g., shows the message text and allows copying)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/utils/deepLinks.ts",
+          "operation": "create",
+          "description": "Add helpers to build safe WhatsApp and Google Maps URLs (proper URL encoding, mobile-friendly formats) and to generate a plain-text fallback message for copy. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/actions/WhatsAppOrderAction.tsx",
+          "operation": "create",
+          "description": "Create a reusable WhatsApp action component that attempts to open the wa.me link and provides a UI fallback that displays the message text and supports copying to clipboard when opening fails. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/areas/customer/pages/CustomerOrderDetailPage.tsx",
+          "operation": "modify",
+          "description": "Wire the WhatsApp action into the customer order detail using the current order id and pickup address. All text in English. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Build the Rider mobile-first UI with bottom navigation, assigned orders list, order detail with Google Maps navigation, proof photo upload, and mark delivered action.",
+      "acceptanceCriteria": [
+        "Rider area is mobile-first and uses a bottom navigation bar for rider primary sections (e.g., Orders, Profile).",
+        "Rider sees only orders assigned to them.",
+        "Order detail includes a 'Navigate' action that opens Google Maps directions using the pickup address.",
+        "Rider can mark an order as Delivered; status updates are persisted and reflected in rider and admin views.",
+        "Rider can upload delivery proof photo from the order detail screen."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/areas/rider/RiderShell.tsx",
+          "operation": "create",
+          "description": "Create the Rider area shell with mobile-first layout and a bottom navigation wrapper. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/areas/rider/components/RiderBottomNav.tsx",
+          "operation": "create",
+          "description": "Implement rider bottom navigation (Orders, Profile) with consistent styling and active state. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/areas/rider/pages/RiderOrdersPage.tsx",
+          "operation": "create",
+          "description": "Implement assigned orders list for rider using role-scoped backend calls (e.g., getOrdersByRider / getMyOrders equivalent for rider) and link to detail. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/areas/rider/pages/RiderOrderDetailPage.tsx",
+          "operation": "create",
+          "description": "Implement rider order detail view including status, pickup address, 'Navigate' action to Google Maps directions, proof photo upload section, and 'Mark Delivered' action. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/areas/rider/pages/RiderProfilePage.tsx",
+          "operation": "create",
+          "description": "Implement rider profile page showing name/role and logout. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useRiderActions.ts",
+          "operation": "create",
+          "description": "Add React Query mutations for rider status changes (updateStatus to delivered) and supporting cache invalidation so status updates reflect across rider/admin views after refetch. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire RiderShell and rider routes (Orders list, Order detail, Profile) into the router under a rider-only guarded path. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Build the Admin Panel UI with dashboard, orders list with status filters, order detail with rider assignment, status tracking, and photo viewing.",
+      "acceptanceCriteria": [
+        "Admin can view an orders list with at least status and assignment visibility.",
+        "Admin can open an order detail and assign a rider (selected from a rider list).",
+        "Admin can see current status and status history or current status changes reflected immediately after updates.",
+        "Admin can view parcel and delivery proof photos for an order.",
+        "Non-admin users cannot access admin APIs or admin pages."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/areas/admin/AdminShell.tsx",
+          "operation": "create",
+          "description": "Create Admin area shell with an app-like layout suitable for mobile-first usage (stacked cards/lists) and optional top tabs/filters, guarded as admin-only. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/areas/admin/pages/AdminDashboardPage.tsx",
+          "operation": "create",
+          "description": "Implement a lightweight dashboard overview (counts by status, quick links to filtered views) without introducing non-requested features. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/areas/admin/pages/AdminOrdersPage.tsx",
+          "operation": "create",
+          "description": "Implement orders list/table optimized for mobile: status filter controls, assignment visibility, and navigation to order detail. Data sourced from admin-scoped backend reads (e.g., getAllOrders / getOrdersByStatus). Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
+          "operation": "create",
+          "description": "Implement admin order detail: key info, assignment control (choose a rider), status update controls for workflow tracking, and photo viewing section. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useAdminOrders.ts",
+          "operation": "create",
+          "description": "Add React Query hooks for admin order reads, status updates, and rider assignment, ensuring cache invalidation/refetch so changes appear immediately in list and detail. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire AdminShell routes (Dashboard, Orders list, Order detail) into the router under an admin-only guarded path, ensuring non-admin direct access shows AccessDeniedScreen. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "summary": "Implement PWA installability and an in-app install prompt for Android/Chromium browsers when available.",
+      "acceptanceCriteria": [
+        "App includes a valid web app manifest configured for installability (name, short_name, icons, start_url, display).",
+        "An 'Install App' button is shown when the browser provides an install prompt (e.g., Android Chrome beforeinstallprompt).",
+        "Tapping 'Install App' triggers the install prompt and handles accepted/dismissed states gracefully.",
+        "After installation, the app launches in standalone/app-like display mode."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/public/manifest.json",
+          "operation": "create",
+          "description": "Create a web app manifest with installability fields (name, short_name, start_url, display, theme/background colors) and reference the generated icons at frontend/public/assets/generated/bed-app-icon.dim_192x192.png and frontend/public/assets/generated/bed-app-icon.dim_512x512.png."
+        },
+        {
+          "path": "frontend/public/sw.js",
+          "operation": "create",
+          "description": "Add a minimal service worker sufficient for PWA install requirements (basic caching strategy kept simple, no push/real-time features)."
+        },
+        {
+          "path": "frontend/index.html",
+          "operation": "modify",
+          "description": "Link the PWA manifest, set appropriate theme-color meta, and ensure icons are discoverable for install. Keep the document mobile-friendly."
+        },
+        {
+          "path": "frontend/src/pwa/registerServiceWorker.ts",
+          "operation": "create",
+          "description": "Register the service worker from within the app runtime (called from App) and handle safe registration failures. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/usePWAInstallPrompt.ts",
+          "operation": "create",
+          "description": "Implement a hook that listens for the install prompt availability event, stores the deferred prompt, and exposes state + an install() action for UI. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/pwa/InstallAppButton.tsx",
+          "operation": "create",
+          "description": "Create an in-app 'Install App' button that appears only when install is available and gracefully handles accepted/dismissed outcomes. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Call service worker registration on app start and place InstallAppButton in appropriate existing screens (e.g., Profile pages) without adding new top-level routes. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "summary": "Apply a cohesive Android-inspired, colorful, mobile-first theme with smooth animations and consistent bottom navigation across roles (no plain white backgrounds).",
+      "acceptanceCriteria": [
+        "Screens use a cohesive theme (color palette, typography, surfaces) and avoid plain white backgrounds (use colored/gradient surfaces).",
+        "Bottom navigation is visually consistent and feels like a native Android app pattern.",
+        "Common interactions (screen transitions, expanding sections, success toasts) include smooth, subtle animations.",
+        "Design is consistently applied across all role areas without introducing new product features."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/index.css",
+          "operation": "create",
+          "description": "Add global styling for an app-like, Android-inspired theme: colorful/gradient background surfaces, typography defaults, and reusable utility classes/variables for consistent colors across all role areas. Avoid plain white backgrounds."
+        },
+        {
+          "path": "frontend/src/components/layout/AppSurface.tsx",
+          "operation": "create",
+          "description": "Create a reusable layout surface component to apply consistent background, padding, and subtle transitions/animations across screens. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/feedback/AnimatedToastRegion.tsx",
+          "operation": "create",
+          "description": "Add a lightweight animated feedback/toast region for success/error messaging used across flows (order creation, uploads, status updates) with subtle animations. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/areas/customer/CustomerShell.tsx",
+          "operation": "modify",
+          "description": "Apply the shared theme surfaces and animations to customer shell and bottom nav for consistent app-like feel. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/areas/rider/RiderShell.tsx",
+          "operation": "modify",
+          "description": "Apply the shared theme surfaces and animations to rider shell and bottom nav for consistent app-like feel. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/areas/admin/AdminShell.tsx",
+          "operation": "modify",
+          "description": "Apply the shared theme surfaces and animations to admin shell to match the same branded look without adding new features. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "summary": "Add generated brand/PWA images under public assets and reference them from the manifest and visible UI branding.",
+      "acceptanceCriteria": [
+        "Generated images are added as static files under frontend/public/assets/generated and referenced by the app (e.g., manifest icons, optional splash/branding usage).",
+        "PWA manifest references the generated icon files.",
+        "App uses the generated branding assets in at least one visible place (e.g., login header/loader/splash panel) without relying on the backend to serve images."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/public/assets/generated/bed-app-icon.dim_512x512.png",
+          "operation": "create",
+          "description": "Add the generated 512x512 app icon asset to be referenced by the PWA manifest and UI branding."
+        },
+        {
+          "path": "frontend/public/assets/generated/bed-app-icon.dim_192x192.png",
+          "operation": "create",
+          "description": "Add the generated 192x192 app icon asset to be referenced by the PWA manifest."
+        },
+        {
+          "path": "frontend/public/assets/generated/bed-splash.dim_1080x1920.png",
+          "operation": "create",
+          "description": "Add the generated vertical splash/launch illustration asset for optional in-app branding usage (e.g., login header panel/background)."
+        },
+        {
+          "path": "frontend/public/assets/generated/bed-bg-tile.dim_512x512.png",
+          "operation": "create",
+          "description": "Add the generated seamless background pattern tile for optional app surface/background usage."
+        },
+        {
+          "path": "frontend/public/manifest.json",
+          "operation": "modify",
+          "description": "Reference frontend/public/assets/generated/bed-app-icon.dim_192x192.png and frontend/public/assets/generated/bed-app-icon.dim_512x512.png in the manifest icons array."
+        },
+        {
+          "path": "frontend/src/pages/auth/LoginPage.tsx",
+          "operation": "modify",
+          "description": "Use generated branding assets in a visible place on the login screen (e.g., header icon and/or splash panel using frontend/public/assets/generated/bed-splash.dim_1080x1920.png and/or frontend/public/assets/generated/bed-app-icon.dim_512x512.png). Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Incorporate the generated background tile (frontend/public/assets/generated/bed-bg-tile.dim_512x512.png) into the global theme (e.g., subtle patterned surface), while preserving performance and readability."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,196 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "Mobile-first delivery web app (PWA) for \"Bikaner Express Delivery\" with Customer, Rider, and Admin roles; app-like Android feel with bottom navigation, colorful branded UI, and smooth animations.",
+  "architectural_notes": [
+    "Build as a mobile-first PWA with Android install prompt/support (web app manifest + service worker).",
+    "Role-based access: Customer, Rider, Admin with separate views/permissions.",
+    "Use app-like navigation patterns (bottom nav for primary flows) and branded non-white theme with smooth animations."
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "imageRequirements": "## Required Images\n- App icon with stylized courier/parcel monogram for 'Bikaner Express Delivery' (bed-app-icon.dim_512x512.png)\n- App icon (small) matching the main icon style (bed-app-icon.dim_192x192.png)\n- Vertical splash/launch background illustration with warm colorful gradient and subtle parcel/courier motifs (bed-splash.dim_1080x1920.png)\n- Seamless background pattern tile with subtle delivery-themed shapes (bed-bg-tile.dim_512x512.png)",
+  "existing_features": [
+    {
+      "id": "feature-implement-role-based-authentication-for-three-account-types-customer-rider-and-admin-using-internet-identity-for-login-and-backend-enforced-authorization-for-all-privileged-actions",
+      "title": "Implement role-based authentication for three account types: Customer, Rider, and Admin, using Internet Identity for login and backend-enforced authorization for all privileged actions.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-the-customer-ui-bottom-navigation-a-book-delivery-flow-that-captures-pickup-address-and-optional-notes-order-confirmation-order-list-and-order-detail-view-showing-status-and-any-uploaded-photos",
+      "title": "Build the Customer UI: bottom-navigation, a 'Book Delivery' flow that captures pickup address (and optional notes), order confirmation, order list, and order detail view showing status and any uploaded photos.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-customer-parcel-photo-upload-and-rider-delivery-proof-photo-upload-including-frontend-capture-upload-ui-and-backend-storage-retrieval-so-that-admin-can-view-both-photo-types-per-order",
+      "title": "Implement Customer parcel photo upload and Rider delivery proof photo upload, including frontend capture/upload UI and backend storage/retrieval so that Admin can view both photo types per order.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-whatsapp-integration-for-customers-provide-a-whatsapp-action-that-opens-whatsapp-or-whatsapp-web-with-a-prefilled-message-containing-the-order-id-and-pickup-address",
+      "title": "Add WhatsApp integration for customers: provide a WhatsApp action that opens WhatsApp (or WhatsApp Web) with a prefilled message containing the order ID and pickup address.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-the-rider-ui-show-assigned-orders-list-order-detail-a-navigation-action-that-opens-google-maps-directions-for-the-pickup-address-proof-photo-upload-and-a-mark-delivered-action-that-updates-the-backend-status",
+      "title": "Build the Rider UI: show assigned orders list, order detail, a navigation action that opens Google Maps directions for the pickup address, proof photo upload, and a 'Mark Delivered' action that updates the backend status.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-the-admin-panel-ui-dashboard-overview-orders-table-list-with-filters-by-status-order-detail-view-ability-to-assign-a-rider-to-an-order-and-ability-to-track-status-and-view-uploaded-photos",
+      "title": "Build the Admin Panel UI: dashboard overview, orders table/list with filters by status, order detail view, ability to assign a rider to an order, and ability to track status and view uploaded photos.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-pwa-install-experience-for-android-users-including-a-web-app-manifest-installable-icons-and-an-in-app-install-app-option-that-appears-when-installation-is-available",
+      "title": "Implement a PWA install experience for Android users, including a web app manifest, installable icons, and an in-app 'Install App' option that appears when installation is available.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-an-app-like-android-inspired-mobile-first-visual-theme-with-smooth-animations-using-a-colorful-branded-palette-no-plain-white-background-and-consistent-design-across-customer-rider-and-admin-areas",
+      "title": "Apply an app-like, Android-inspired mobile-first visual theme with smooth animations, using a colorful branded palette (no plain white background) and consistent design across Customer, Rider, and Admin areas.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-generate-and-include-required-static-brand-pwa-assets-in-the-frontend-public-assets-directory-and-use-them-in-the-ui-and-pwa-manifest-icons-splash-background",
+      "title": "Generate and include required static brand/PWA assets in the frontend public assets directory, and use them in the UI and PWA manifest (icons/splash/background).",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Customer login and account flow",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Rider login and account flow",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Admin panel authentication and access control",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Customer delivery booking (pickup address submission)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "WhatsApp integration for customer communication",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Customer parcel photo upload",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Rider assigned orders list and order detail views",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Google Maps navigation integration for riders",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Rider delivery proof photo upload",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Rider mark order as delivered (status update)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Admin dashboard",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Admin assign riders to orders",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Admin track order status workflow",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Admin view uploaded parcel and delivery proof photos",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-15",
+      "summary": "Mobile-first app-like UI (bottom navigation, colorful branded theme, no plain white background, smooth animations)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-16",
+      "summary": "PWA installability: \"Install App\" option for Android users",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Create backend data models and APIs to support deliveries: order creation by customers, assignment to riders by admins, order status progression, and retrieval APIs scoped by role (customer sees their own orders; rider sees assigned orders; admin sees all).",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "status": "pending"
+    }
+  ],
+  "projectName": "Bikaner Express Delivery",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --radius: 0.75rem;
+        
+        /* Vibrant delivery-themed colors */
+        --background: 0.98 0.01 280;
+        --foreground: 0.15 0.02 280;
+        --card: 1 0 0;
+        --card-foreground: 0.15 0.02 280;
+        --popover: 1 0 0;
+        --popover-foreground: 0.15 0.02 280;
+        
+        /* Primary: Vibrant orange (delivery/speed theme) */
+        --primary: 0.62 0.20 35;
+        --primary-foreground: 1 0 0;
+        
+        /* Secondary: Deep blue */
+        --secondary: 0.55 0.15 250;
+        --secondary-foreground: 1 0 0;
+        
+        --muted: 0.96 0.01 280;
+        --muted-foreground: 0.50 0.02 280;
+        
+        /* Accent: Bright teal */
+        --accent: 0.70 0.12 180;
+        --accent-foreground: 0.15 0.02 280;
+        
+        --destructive: 0.55 0.22 25;
+        --destructive-foreground: 1 0 0;
+        
+        --border: 0.90 0.01 280;
+        --input: 0.90 0.01 280;
+        --ring: 0.62 0.20 35;
+        
+        --chart-1: 0.62 0.20 35;
+        --chart-2: 0.55 0.15 250;
+        --chart-3: 0.70 0.12 180;
+        --chart-4: 0.65 0.18 320;
+        --chart-5: 0.58 0.16 140;
+    }
+
+    .dark {
+        --background: 0.15 0.02 280;
+        --foreground: 0.98 0.01 280;
+        --card: 0.20 0.02 280;
+        --card-foreground: 0.98 0.01 280;
+        --popover: 0.18 0.02 280;
+        --popover-foreground: 0.98 0.01 280;
+        
+        --primary: 0.68 0.18 35;
+        --primary-foreground: 0.15 0.02 280;
+        
+        --secondary: 0.45 0.12 250;
+        --secondary-foreground: 0.98 0.01 280;
+        
+        --muted: 0.25 0.02 280;
+        --muted-foreground: 0.65 0.02 280;
+        
+        --accent: 0.60 0.10 180;
+        --accent-foreground: 0.98 0.01 280;
+        
+        --destructive: 0.60 0.20 25;
+        --destructive-foreground: 0.98 0.01 280;
+        
+        --border: 0.30 0.02 280;
+        --input: 0.30 0.02 280;
+        --ring: 0.68 0.18 35;
+    }
+
+    * {
+        @apply border-border;
+    }
+    
+    body {
+        @apply bg-background text-foreground;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    }
+}
+
+@layer utilities {
+    .app-gradient {
+        background: linear-gradient(135deg, 
+            oklch(0.62 0.20 35) 0%, 
+            oklch(0.55 0.15 250) 50%, 
+            oklch(0.70 0.12 180) 100%
+        );
+    }
+    
+    .animate-bounce-subtle {
+        animation: bounce-subtle 0.3s ease-in-out;
+    }
+}
+
+@keyframes bounce-subtle {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-4px);
+    }
+}
