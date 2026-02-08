@@ -1,386 +1,162 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Admin Panel upgrade (frontend): /admin password login gating, order/rider modules, reports, settings, WhatsApp links, responsive UI",
+  "title": "UI theming and mobile layout alignment to reference website",
   "requirements": [
     {
-      "id": "REQ-15",
-      "summary": "Add separate /admin username+password login UI and gate all admin screens behind an admin session (no Internet Identity required).",
+      "id": "REQ-30",
+      "summary": "Refresh global visual styling (color system, typography, spacing, surfaces, shadows, and layout) to align with the reference website across Customer, Rider, and Admin flows without changing user-facing English copy.",
       "acceptanceCriteria": [
-        "Visiting `/#/admin` (or `/admin` depending on router setup) shows an Admin Login form when there is no active admin session.",
-        "Admin Login form requires username and password and provides clear English error messages for invalid credentials.",
-        "After successful login, the Admin UI becomes accessible without requiring Internet Identity.",
-        "All backend methods that power admin-only features validate an admin session (or equivalent backend-enforced admin authentication) and reject unauthenticated callers."
+        "The app’s overall styling (background treatment, card style, typography scale, and button styles) is noticeably aligned with the reference website’s aesthetic, rather than the current default look.",
+        "The changes apply consistently across Customer, Rider, and Admin areas (including login/setup screens), without breaking existing flows.",
+        "No user-facing copy is changed away from English as part of this styling update (keep all visible UI text in English)."
       ],
       "file_operations": [
-        {
-          "path": "frontend/src/backend.d.ts",
-          "operation": "modify",
-          "description": "Extend the frontend backend interface typings to include admin-session capabilities needed by the new /admin password flow (login, logout, and session check), so the Admin UI can call server-verified session functions without Internet Identity."
-        },
-        {
-          "path": "frontend/src/areas/admin/auth/useAdminAuth.ts",
-          "operation": "create",
-          "description": "Create an admin-auth hook to manage admin session state (login/logout, persisted session token if applicable, loading/error), and expose helpers used by admin screens. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/areas/admin/auth/AdminLoginPage.tsx",
-          "operation": "create",
-          "description": "Create the /admin login screen with username+password form, English validation/error copy, and submit handling using the admin-auth hook. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/areas/admin/auth/AdminGuard.tsx",
-          "operation": "create",
-          "description": "Create a guard wrapper that renders AdminLoginPage when there is no active admin session, otherwise renders the admin shell content; ensure it blocks all admin data fetches until authenticated. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/areas/admin/AdminShell.tsx",
-          "operation": "modify",
-          "description": "Wrap the existing admin UI in AdminGuard and add an admin logout action (clears admin session state and cached admin queries) without relying on Internet Identity. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Adjust routing so navigating to /admin always lands in the admin guard flow (login vs admin UI) without affecting existing customer/rider Internet Identity routing. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-17",
-      "summary": "Add Admin UI for full manual order creation and display the required order fields (customer name/mobile/pickup/drop/parcel/payment type).",
-      "acceptanceCriteria": [
-        "Admin can create a new order from the Admin UI and it appears immediately in the Admin orders table.",
-        "Orders include and display the required fields in the Admin order details view.",
-        "Existing customer order creation flow continues to work and produces orders that can be viewed in the Admin panel.",
-        "Backend enforces that only an authenticated admin session can manually create orders."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/backend.d.ts",
-          "operation": "modify",
-          "description": "Update typings to include the admin manual order creation capability and the extended order fields needed by the admin UI (customer name, mobile number, pickup location, drop location, parcel description, payment type)."
-        },
-        {
-          "path": "frontend/src/hooks/useAdminOrders.ts",
-          "operation": "modify",
-          "description": "Add admin mutations/queries for manual order creation and ensure query invalidation keeps the Admin orders table in sync after creation. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/areas/admin/pages/AdminCreateOrderPage.tsx",
-          "operation": "create",
-          "description": "Create an Admin 'Create Order' form page (customer name/mobile/pickup/drop/parcel description/payment type and any required address fields) with English labels, validation, and submit flow. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/areas/admin/pages/AdminOrdersPage.tsx",
-          "operation": "modify",
-          "description": "Add a 'Create Order' entry point (button/section) that opens AdminCreateOrderPage and refreshes the orders list after successful creation; update the orders list item preview to include key fields (e.g., customer name and payment type) while staying responsive. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
-          "operation": "modify",
-          "description": "Extend the order detail UI to display all required fields (customer name, mobile number, pickup location, drop location, parcel description, payment type) and keep existing parcel/proof photo display. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-18",
-      "summary": "Implement admin-controlled status workflow in UI with statuses New/Assigned/Picked/Delivered and align label mapping with existing enum values.",
-      "acceptanceCriteria": [
-        "Admin can update an order status from the order detail screen.",
-        "Status badges/labels in Admin UI show the requested wording (New/Assigned/Picked/Delivered).",
-        "Backend rejects invalid status transitions based on role rules already in place (admin allowed; rider restricted)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/areas/admin/pages/AdminOrdersPage.tsx",
-          "operation": "modify",
-          "description": "Update status filter values, badge colors, and label mapping to use the current backend enum values (new/assigned/picked/delivered) while displaying the requested wording (New/Assigned/Picked/Delivered) in English. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
-          "operation": "modify",
-          "description": "Add admin status update controls on the order detail screen and ensure the UI uses the requested status wording and updates immediately after success (invalidate/refresh order queries). Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/hooks/useAdminOrders.ts",
-          "operation": "modify",
-          "description": "Add an admin mutation for updating order status (and proper cache invalidation for order + lists) that the AdminOrderDetailPage can call. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-19",
-      "summary": "Add Admin Rider Management UI (add/edit/delete) and replace raw Principal entry assignment with rider selection.",
-      "acceptanceCriteria": [
-        "Admin UI provides a Riders screen/tab with a riders table/list and Add/Edit/Delete actions.",
-        "Rider record includes Name, Phone Number, and Vehicle Type (Bike).",
-        "Assigning a rider to an order is done by selecting a rider record in the UI (no raw Principal ID required in the normal flow).",
-        "Backend enforces that only authenticated admin sessions can create/update/delete riders and assign riders to orders."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/backend.d.ts",
-          "operation": "modify",
-          "description": "Update typings to include the admin rider management capabilities needed by the UI (create, update, delete, list) and order assignment-by-rider-id functions."
-        },
-        {
-          "path": "frontend/src/hooks/useAdminRiders.ts",
-          "operation": "create",
-          "description": "Create admin rider hooks for listing riders and performing add/edit/delete operations with cache invalidation. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/areas/admin/pages/AdminRidersPage.tsx",
-          "operation": "create",
-          "description": "Create Riders management screen with responsive riders table/list and Add/Edit/Delete dialogs/forms (Name, Phone Number, Vehicle Type default Bike). Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/hooks/useAdminOrders.ts",
-          "operation": "modify",
-          "description": "Update assignment mutation(s) to accept a selected rider record (Principal) from the Riders list rather than a raw typed Principal string in the normal flow. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
-          "operation": "modify",
-          "description": "Replace the manual Principal ID input assignment UI with a rider picker/select sourced from riders records, and show assigned rider details (name/phone/vehicle type) where available. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/areas/admin/AdminShell.tsx",
-          "operation": "modify",
-          "description": "Add a 'Riders' navigation tab/section and wire it to AdminRidersPage. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-20",
-      "summary": "Show rider-provided Google Maps location link in Admin UI (stored URL) as a clickable action with empty-state.",
-      "acceptanceCriteria": [
-        "Each rider record has an optional field for a Google Maps link (URL).",
-        "Admin UI shows a 'Open in Google Maps' link/button when a rider location link is present.",
-        "The link opens in a new tab/window and is visibly a Google Maps URL.",
-        "If no link is set, UI shows an empty state (e.g., 'No location link provided yet')."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useAdminRiders.ts",
-          "operation": "modify",
-          "description": "Add/update rider location link mutation support and ensure riders queries invalidate on update. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/areas/admin/pages/AdminRidersPage.tsx",
-          "operation": "modify",
-          "description": "Add an optional 'Google Maps link' field to the rider add/edit form and render an 'Open in Google Maps' action opening in a new tab when present; show an English empty-state when missing. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
-          "operation": "modify",
-          "description": "When an order has an assigned rider with a location link, render a clickable 'Open in Google Maps' action in the order detail (or rider info section) and show an English empty-state if missing. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-21",
-      "summary": "Display delivery proof upload timestamp in Admin UI and ensure rider UI clearly blocks delivery without proof photo (frontend messaging).",
-      "acceptanceCriteria": [
-        "Backend rejects any attempt to transition an order to Delivered if no proof photo exists for the order.",
-        "When a proof photo is uploaded, backend stores an upload timestamp.",
-        "Admin order detail view displays the proof photo (existing) and the proof upload date/time (new).",
-        "Rider UI continues to allow proof upload, and 'Mark Delivered' fails with a clear message if proof photo is missing."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/backend.d.ts",
-          "operation": "modify",
-          "description": "Ensure typings include the proof timestamp fields returned for admin viewing (e.g., proof photo timestamp string/time) used by the Admin order detail view."
-        },
-        {
-          "path": "frontend/src/hooks/useAdminOrders.ts",
-          "operation": "modify",
-          "description": "Add a query/helper for fetching order proof photo + timestamp (using the available backend capability) and cache it per order to display in admin details. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
-          "operation": "modify",
-          "description": "Fetch and render the delivery proof timestamp in English date/time format alongside the proof photo; handle missing timestamp with an English empty-state. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/areas/rider/pages/RiderOrderDetailPage.tsx",
-          "operation": "modify",
-          "description": "Improve rider-side error handling so attempting to mark Delivered without proof (or when backend rejects) shows a clear English message aligned with the delivery-proof rule; keep current UI disable logic intact. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-22",
-      "summary": "Implement Admin Dashboard KPIs (today/month totals, pending/completed, active riders, daily/monthly earnings) in UI using consistent rules.",
-      "acceptanceCriteria": [
-        "Admin dashboard shows separate 'Today' and 'This Month' totals for orders.",
-        "Dashboard shows counts for Pending and Completed deliveries based on status.",
-        "Dashboard shows Active Riders count based on riders who currently have at least one Assigned/Picked order (or another clearly-defined rule implemented consistently).",
-        "Dashboard shows Total Earnings (Daily/Monthly) derived from stored order charges/earnings data (admin-entered or rate-calculated)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/areas/admin/pages/AdminDashboardPage.tsx",
-          "operation": "modify",
-          "description": "Replace legacy status counting with the current status enum values and implement KPI cards for Today/This Month total orders, Pending (New/Assigned/Picked), Completed (Delivered), Active Riders (riders with ≥1 Assigned/Picked order), and Earnings (Daily/Monthly) using available order/rate data from backend queries. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/hooks/useAdminOrders.ts",
-          "operation": "modify",
-          "description": "Add any needed supporting queries for dashboard calculations (e.g., orders by status or richer order data) and ensure efficient caching so the dashboard remains responsive. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/hooks/useAdminRiders.ts",
-          "operation": "modify",
-          "description": "Expose riders list to dashboard KPIs so 'Active Riders' can be computed consistently and efficiently. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/utils/adminKpis.ts",
-          "operation": "create",
-          "description": "Add a utility module to compute date-based KPIs (today/this month) and active rider counts deterministically from order timestamps and statuses, keeping logic shared between dashboard and reports. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-23",
-      "summary": "Add Admin Reports UI (daily/weekly/monthly) with CSV export and print-friendly PDF via browser print.",
-      "acceptanceCriteria": [
-        "Admin can view report summaries for Daily/Weekly/Monthly time ranges.",
-        "Reports include at minimum: order count, delivered count, totals by payment type, and total earnings for the selected period.",
-        "Admin can export an Excel-compatible file (CSV download).",
-        "Admin can export a PDF via a print-friendly report layout that works with browser 'Print' -> 'Save as PDF'."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/areas/admin/pages/AdminReportsPage.tsx",
-          "operation": "create",
-          "description": "Create a Reports screen with Daily/Weekly/Monthly selectors, summary cards/tables for order count, delivered count, payment-type totals, and earnings; include a print-friendly layout section intended for browser print-to-PDF. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/utils/reporting.ts",
-          "operation": "create",
-          "description": "Add report utilities to aggregate orders by time range, group totals by payment type (cash/online), and compute earnings consistently with dashboard rules. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/utils/csvExport.ts",
-          "operation": "create",
-          "description": "Add a CSV export helper that generates Excel-compatible CSV (proper escaping) and triggers file download for the selected report range. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/areas/admin/AdminShell.tsx",
-          "operation": "modify",
-          "description": "Add a 'Reports' navigation tab/section and wire it to AdminReportsPage. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-24",
-      "summary": "Add WhatsApp deep-link actions in Admin order details for messaging rider (on assignment) and customer (on delivery) with fallback copy flow.",
-      "acceptanceCriteria": [
-        "Admin order detail view includes a 'Message Rider on WhatsApp' action when an order is assigned and the assigned rider has a phone number.",
-        "Admin order detail view includes a 'Message Customer on WhatsApp' action when an order is delivered and the order has a customer mobile number.",
-        "Clicking the action opens WhatsApp/WhatsApp Web using the existing deep link strategy (`wa.me`) with a clear, prefilled message that includes at least Order ID, pickup, and drop location.",
-        "If WhatsApp does not open, the existing fallback dialog pattern (copy message) is shown, similar to `WhatsAppOrderAction`."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/utils/deepLinks.ts",
-          "operation": "modify",
-          "description": "Extend WhatsApp message builders to support messages that include Order ID, pickup location/address, and drop location/address, while preserving existing callers; keep all user-facing text in English. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/actions/WhatsAppOrderAction.tsx",
-          "operation": "modify",
-          "description": "Enhance WhatsAppOrderAction props and UI copy so it can be reused for both 'Message Rider' and 'Message Customer' flows, and keep the existing fallback copy dialog pattern. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
-          "operation": "modify",
-          "description": "Add conditional WhatsApp actions: 'Message Rider on WhatsApp' when assigned and rider phone exists, and 'Message Customer on WhatsApp' when delivered and customer mobile exists; wire both through WhatsAppOrderAction and ensure messages include Order ID, pickup, and drop. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-25",
-      "summary": "Add Admin Settings UI for company details/logo/contact numbers and rate list management (used for earnings calculations in UI).",
-      "acceptanceCriteria": [
-        "Admin UI has a Settings screen where Company Name and Contact Numbers can be edited and saved.",
-        "Admin can upload/update a Company Logo (stored and retrievable) and see a preview in the Settings screen.",
-        "Admin can manage a rate list (create/update/delete rate entries) and changes persist.",
-        "Order earnings/charges reflect the configured rates according to a defined rule implemented in code (and visible in UI on order detail and reports)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/backend.d.ts",
-          "operation": "modify",
-          "description": "Update typings to include settings and rate-list capabilities required by the Admin Settings UI (fetch/update company settings, upload/retrieve logo reference, and CRUD for rate entries)."
-        },
-        {
-          "path": "frontend/src/hooks/useAdminSettings.ts",
-          "operation": "create",
-          "description": "Create hooks for fetching/updating company settings, uploading/updating company logo, and managing the rate list; include cache invalidation for dashboard/reports/order detail computations. Use the blob-storage component to handle logo blobs via ExternalBlob and direct URL preview; Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/areas/admin/pages/AdminSettingsPage.tsx",
-          "operation": "create",
-          "description": "Create Settings screen with editable Company Name, Contact Numbers, Company Logo upload/preview (via blob-storage ExternalBlob), and a Rate List management UI (create/update/delete entries) with English copy and validation. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/areas/admin/pages/AdminOrderDetailPage.tsx",
-          "operation": "modify",
-          "description": "Display earnings/charges derived from the current rate settings (per defined UI rule) so admins can see the calculation outcome on order detail. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/areas/admin/pages/AdminReportsPage.tsx",
-          "operation": "modify",
-          "description": "Use the configured rates/settings (via hooks/utilities) to compute and display earnings totals consistently for the selected report period. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/areas/admin/AdminShell.tsx",
-          "operation": "modify",
-          "description": "Add a 'Settings' navigation tab/section and wire it to AdminSettingsPage. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-26",
-      "summary": "Make Admin Panel responsive, professional, and theme-consistent with brand tokens; add clear navigation without breaking Customer/Rider areas.",
-      "acceptanceCriteria": [
-        "Admin screens render correctly on narrow mobile widths and typical desktop widths, with no overflow issues in tables/forms.",
-        "Admin navigation makes it easy to access Dashboard, Orders, Riders, Reports, and Settings.",
-        "Existing Customer and Rider routes continue to function and look consistent with the current branded theme.",
-        "All user-facing text added/changed for these features is in English."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/areas/admin/AdminShell.tsx",
-          "operation": "modify",
-          "description": "Redesign admin navigation into a clean, responsive layout (mobile-friendly tab bar/segmented control and desktop-friendly layout) providing access to Dashboard, Orders, Riders, Reports, and Settings; ensure content containers and padding work across breakpoints. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/areas/admin/pages/AdminOrdersPage.tsx",
-          "operation": "modify",
-          "description": "Improve orders list/table responsiveness (stacking rows on mobile, truncation/line-clamp, horizontal scroll when necessary) and ensure all labels are English and status wording matches requirements. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/areas/admin/pages/AdminRidersPage.tsx",
-          "operation": "modify",
-          "description": "Ensure Riders list/forms are fully responsive (mobile-first) and use existing theme tokens for a professional look. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/areas/admin/pages/AdminReportsPage.tsx",
-          "operation": "modify",
-          "description": "Ensure the Reports screen is responsive and includes a print stylesheet-friendly structure for print-to-PDF while remaining readable on mobile. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/areas/admin/pages/AdminSettingsPage.tsx",
-          "operation": "modify",
-          "description": "Ensure Settings screen layouts are responsive (logo preview scaling, form grid on desktop, stacked fields on mobile) and use brand token colors and existing UI components. Verify the component's usage instructions before implementing."
-        },
         {
           "path": "frontend/src/index.css",
           "operation": "modify",
-          "description": "Add minimal, theme-token-based utility classes (if needed) to support admin table responsiveness and print-friendly report layout, without introducing new global stylesheet paths. Verify the component's usage instructions before implementing."
+          "description": "Update global CSS variables and base styles to match the reference look: background/surface treatments, elevation/shadow tokens, radius, border contrast, and consistent typography defaults; introduce shared CSS vars for mobile safe-area and bottom-nav height used across shells."
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Centralize the refreshed design tokens in Tailwind theme extensions (colors mapped to CSS vars, refined shadows, border radii, and spacing/typography scale adjustments) so pages inherit the updated look consistently."
+        },
+        {
+          "path": "frontend/src/components/layout/AppSurface.tsx",
+          "operation": "modify",
+          "description": "Adjust the root surface wrapper to use the updated background/surface styling (e.g., new theme tokens and safe-area padding), ensuring consistent page framing across Customer/Rider/Admin without per-page one-offs."
+        },
+        {
+          "path": "frontend/src/components/layout/PageContainer.tsx",
+          "operation": "create",
+          "description": "Create a shared layout wrapper that standardizes page max-width, horizontal padding, top spacing, and section spacing to match the reference layout; use it across Customer/Rider/Admin pages to avoid one-off styling."
+        },
+        {
+          "path": "frontend/src/pages/auth/LoginPage.tsx",
+          "operation": "modify",
+          "description": "Align the public login screen composition (card surface, header typography scale, spacing, and button styling) to the updated theme tokens while keeping all visible copy in English; keep existing generated icon usage intact."
+        },
+        {
+          "path": "frontend/src/pages/auth/ProfileSetupPage.tsx",
+          "operation": "modify",
+          "description": "Align the profile setup screen surfaces and selection rows (radio options) with the updated theme (cards, borders, hover/active states, typography, spacing), keeping all copy in English."
+        },
+        {
+          "path": "frontend/src/areas/admin/auth/AdminLoginPage.tsx",
+          "operation": "modify",
+          "description": "Align the admin login screen to the new theme (card elevation, inputs, button styling, spacing, and icon surface) and keep all visible copy in English."
+        },
+        {
+          "path": "frontend/src/areas/admin/AdminShell.tsx",
+          "operation": "modify",
+          "description": "Update admin shell spacing and surfaces to match the new layout (header spacing, tabs surface/active styling via shared tokens/wrappers), ensuring consistent look with customer/rider areas without changing behavior."
+        },
+        {
+          "path": "frontend/src/components/auth/AccessDeniedScreen.tsx",
+          "operation": "modify",
+          "description": "Align the access denied screen card and button styles to the updated theme tokens (surface, shadows, border, typography) while keeping all copy in English."
+        }
+      ]
+    },
+    {
+      "id": "REQ-31",
+      "summary": "Refine mobile UI patterns to match the reference design: bottom navigation appearance/states, content padding vs fixed nav, and cohesive empty-state cards for lists.",
+      "acceptanceCriteria": [
+        "Customer and Rider bottom navigation bars visually match the intended reference styling (surface color, border/shadow, spacing, and active-state emphasis).",
+        "List empty states (e.g., “No orders yet” card) use a cohesive card style consistent with the updated theme (proper elevation, padding, and readable contrast).",
+        "Content is not obscured by fixed bottom navigation; safe padding remains correct on common Android viewport sizes."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/layout/MobileBottomNav.tsx",
+          "operation": "create",
+          "description": "Create a shared mobile bottom navigation wrapper (surface, border/shadow, height, safe-area inset handling, icon/label sizing, active indicator styling) that Customer and Rider bottom navs compose. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/areas/customer/components/CustomerBottomNav.tsx",
+          "operation": "modify",
+          "description": "Refactor to compose the new shared MobileBottomNav for consistent height, padding, and active/unactive states aligned with the reference design. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/areas/rider/components/RiderBottomNav.tsx",
+          "operation": "modify",
+          "description": "Refactor to compose the new shared MobileBottomNav for consistent height, padding, and active/unactive states aligned with the reference design. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/patterns/EmptyStateCard.tsx",
+          "operation": "create",
+          "description": "Create a reusable empty-state card pattern (icon, title, description, consistent padding/elevation/contrast) that matches the updated theme and reference style. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/areas/customer/pages/CustomerOrdersPage.tsx",
+          "operation": "modify",
+          "description": "Update list empty/loading states to use the shared EmptyStateCard and adjust page padding to ensure content is not obscured by the fixed bottom navigation; maintain English copy."
+        },
+        {
+          "path": "frontend/src/areas/rider/pages/RiderOrdersPage.tsx",
+          "operation": "modify",
+          "description": "Update list empty/loading states to use the shared EmptyStateCard and adjust page padding to ensure content is not obscured by the fixed bottom navigation; maintain English copy."
+        },
+        {
+          "path": "frontend/src/areas/customer/CustomerShell.tsx",
+          "operation": "modify",
+          "description": "Normalize mobile safe padding and content inset relative to the fixed bottom nav by using shared layout vars/wrappers (remove ad-hoc padding where possible) so content stays visible on common Android viewport sizes."
+        },
+        {
+          "path": "frontend/src/areas/rider/RiderShell.tsx",
+          "operation": "modify",
+          "description": "Normalize mobile safe padding and content inset relative to the fixed bottom nav by using shared layout vars/wrappers (remove ad-hoc padding where possible) so content stays visible on common Android viewport sizes."
+        }
+      ]
+    },
+    {
+      "id": "REQ-32",
+      "summary": "Centralize design updates using shared theme tokens and reusable layout/styling patterns (Tailwind theme + shared wrappers), minimizing page-by-page one-off styling and avoiding changes to immutable frontend paths.",
+      "acceptanceCriteria": [
+        "Core visual updates are centralized (e.g., via CSS variables/Tailwind theme and shared layout components) so that Customer/Rider/Admin pages inherit the new look consistently.",
+        "No edits are made to any frontend immutable paths listed in SYSTEM_CONTEXT (compose existing UI components instead of modifying them)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Consolidate the new design system into CSS variables and a small set of global utility classes (surface/elevation helpers, background treatment, bottom-nav safe-area vars) to minimize per-page styling."
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Ensure Tailwind theme mappings rely on centralized CSS variables/tokens (colors/radii/shadows/typography) so updates propagate across Customer/Rider/Admin areas."
+        },
+        {
+          "path": "frontend/src/components/layout/PageContainer.tsx",
+          "operation": "modify",
+          "description": "Ensure the shared PageContainer supports the majority of page spacing/layout needs (max-width, padding, section spacing) to reduce page-specific layout classes; keep it composable so immutable paths are not edited."
+        },
+        {
+          "path": "frontend/src/components/layout/MobileBottomNav.tsx",
+          "operation": "modify",
+          "description": "Ensure MobileBottomNav encapsulates bottom-nav sizing/states and safe-area handling so CustomerBottomNav and RiderBottomNav stay minimal and consistent. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/patterns/EmptyStateCard.tsx",
+          "operation": "modify",
+          "description": "Ensure EmptyStateCard supports common list empty-state needs (icon/title/description and optional actions) so order list pages don’t need one-off empty-state styling. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/areas/customer/pages/CustomerOrdersPage.tsx",
+          "operation": "modify",
+          "description": "Replace remaining one-off empty/loading card styling with shared patterns (PageContainer + EmptyStateCard) to demonstrate centralized styling adoption without changing business logic or English copy."
+        },
+        {
+          "path": "frontend/src/areas/rider/pages/RiderOrdersPage.tsx",
+          "operation": "modify",
+          "description": "Replace remaining one-off empty/loading card styling with shared patterns (PageContainer + EmptyStateCard) to demonstrate centralized styling adoption without changing business logic or English copy."
+        },
+        {
+          "path": "frontend/src/areas/admin/AdminShell.tsx",
+          "operation": "modify",
+          "description": "Adopt shared layout wrappers (PageContainer) and tokenized styles for admin header/tabs spacing so admin pages inherit the new look without broad per-page edits."
         }
       ]
     }

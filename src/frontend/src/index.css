@@ -4,50 +4,65 @@
 
 @layer base {
   :root {
-    --background: oklch(98% 0 0);
+    /* Neutral, clean palette inspired by reference */
+    --background: oklch(96% 0 0);
     --foreground: oklch(20% 0 0);
     --card: oklch(100% 0 0);
     --card-foreground: oklch(20% 0 0);
     --popover: oklch(100% 0 0);
     --popover-foreground: oklch(20% 0 0);
-    --primary: oklch(55% 0.18 25);
+    
+    /* Primary: Clean blue-gray */
+    --primary: oklch(45% 0.08 250);
     --primary-foreground: oklch(100% 0 0);
-    --secondary: oklch(92% 0.02 260);
+    
+    /* Secondary and muted tones */
+    --secondary: oklch(94% 0.01 250);
     --secondary-foreground: oklch(20% 0 0);
-    --muted: oklch(95% 0.01 260);
-    --muted-foreground: oklch(50% 0.01 260);
-    --accent: oklch(92% 0.02 260);
+    --muted: oklch(94% 0.01 250);
+    --muted-foreground: oklch(55% 0.02 250);
+    --accent: oklch(94% 0.01 250);
     --accent-foreground: oklch(20% 0 0);
+    
+    /* Semantic colors */
     --destructive: oklch(55% 0.22 25);
     --destructive-foreground: oklch(100% 0 0);
-    --border: oklch(88% 0.01 260);
-    --input: oklch(88% 0.01 260);
-    --ring: oklch(55% 0.18 25);
-    --radius: 0.5rem;
     --success: oklch(60% 0.15 145);
     --warning: oklch(70% 0.15 85);
+    
+    /* Borders and inputs */
+    --border: oklch(90% 0.005 250);
+    --input: oklch(90% 0.005 250);
+    --ring: oklch(45% 0.08 250);
+    
+    /* Radius */
+    --radius: 0.75rem;
+    
+    /* Layout spacing */
+    --bottom-nav-height: 4rem;
+    --safe-area-bottom: env(safe-area-inset-bottom, 0px);
   }
 
   .dark {
-    --background: oklch(15% 0.01 260);
+    --background: oklch(15% 0.01 250);
     --foreground: oklch(98% 0 0);
-    --card: oklch(18% 0.01 260);
+    --card: oklch(18% 0.01 250);
     --card-foreground: oklch(98% 0 0);
-    --popover: oklch(18% 0.01 260);
+    --popover: oklch(18% 0.01 250);
     --popover-foreground: oklch(98% 0 0);
-    --primary: oklch(65% 0.18 25);
-    --primary-foreground: oklch(15% 0.01 260);
-    --secondary: oklch(25% 0.02 260);
+    --primary: oklch(65% 0.12 250);
+    --primary-foreground: oklch(15% 0.01 250);
+    --secondary: oklch(25% 0.02 250);
     --secondary-foreground: oklch(98% 0 0);
-    --muted: oklch(25% 0.02 260);
-    --muted-foreground: oklch(70% 0.01 260);
-    --accent: oklch(25% 0.02 260);
+    --muted: oklch(25% 0.02 250);
+    --muted-foreground: oklch(70% 0.01 250);
+    --accent: oklch(25% 0.02 250);
     --accent-foreground: oklch(98% 0 0);
     --destructive: oklch(55% 0.22 25);
     --destructive-foreground: oklch(98% 0 0);
-    --border: oklch(25% 0.02 260);
-    --input: oklch(25% 0.02 260);
-    --ring: oklch(65% 0.18 25);
+    --border: oklch(25% 0.02 250);
+    --input: oklch(25% 0.02 250);
+    --ring: oklch(65% 0.12 250);
     --success: oklch(60% 0.15 145);
     --warning: oklch(70% 0.15 85);
   }
@@ -63,13 +78,23 @@
   }
 }
 
-/* Gradient background for app surface */
-.gradient-bg {
+/* Clean surface background */
+.app-surface {
+  @apply bg-background;
+}
+
+/* Gradient background for auth pages only */
+.app-gradient {
   background: linear-gradient(135deg, 
-    oklch(60% 0.15 25) 0%,
-    oklch(55% 0.12 340) 50%,
-    oklch(50% 0.15 220) 100%
+    oklch(55% 0.15 250) 0%,
+    oklch(50% 0.12 280) 50%,
+    oklch(45% 0.15 220) 100%
   );
+}
+
+/* Content padding for bottom nav */
+.content-with-bottom-nav {
+  padding-bottom: calc(var(--bottom-nav-height) + var(--safe-area-bottom) + 1rem);
 }
 
 /* Floating install button animation */
@@ -86,10 +111,10 @@
 
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 20px oklch(55% 0.18 25 / 0.3);
+    box-shadow: 0 0 20px oklch(45% 0.08 250 / 0.3);
   }
   50% {
-    box-shadow: 0 0 30px oklch(55% 0.18 25 / 0.6);
+    box-shadow: 0 0 30px oklch(45% 0.08 250 / 0.6);
   }
 }
 
@@ -119,7 +144,7 @@
     background: white !important;
   }
   
-  .gradient-bg {
+  .app-gradient, .app-surface {
     background: white !important;
   }
 }

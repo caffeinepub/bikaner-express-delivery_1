@@ -59,9 +59,9 @@ export default function ProfileSetupPage() {
             <div className="space-y-3">
               <Label>I am a</Label>
               <RadioGroup value={role} onValueChange={(value) => setRole(value as Role)} disabled={isSaving}>
-                <div className="flex items-center space-x-3 p-3 border rounded-lg hover:bg-accent transition-colors">
+                <div className="flex items-center space-x-3 p-4 border rounded-lg hover:bg-accent/50 transition-colors cursor-pointer">
                   <RadioGroupItem value={Role.customer} id="customer" />
-                  <Label htmlFor="customer" className="flex items-center gap-2 cursor-pointer flex-1">
+                  <Label htmlFor="customer" className="flex items-center gap-3 cursor-pointer flex-1">
                     <User className="h-5 w-5 text-primary" />
                     <div>
                       <div className="font-medium">Customer</div>
@@ -70,9 +70,9 @@ export default function ProfileSetupPage() {
                   </Label>
                 </div>
 
-                <div className="flex items-center space-x-3 p-3 border rounded-lg hover:bg-accent transition-colors">
+                <div className="flex items-center space-x-3 p-4 border rounded-lg hover:bg-accent/50 transition-colors cursor-pointer">
                   <RadioGroupItem value={Role.rider} id="rider" />
-                  <Label htmlFor="rider" className="flex items-center gap-2 cursor-pointer flex-1">
+                  <Label htmlFor="rider" className="flex items-center gap-3 cursor-pointer flex-1">
                     <Bike className="h-5 w-5 text-primary" />
                     <div>
                       <div className="font-medium">Rider</div>
@@ -82,9 +82,9 @@ export default function ProfileSetupPage() {
                 </div>
 
                 {isAdmin && (
-                  <div className="flex items-center space-x-3 p-3 border rounded-lg hover:bg-accent transition-colors">
+                  <div className="flex items-center space-x-3 p-4 border rounded-lg hover:bg-accent/50 transition-colors cursor-pointer">
                     <RadioGroupItem value={Role.admin} id="admin" />
-                    <Label htmlFor="admin" className="flex items-center gap-2 cursor-pointer flex-1">
+                    <Label htmlFor="admin" className="flex items-center gap-3 cursor-pointer flex-1">
                       <Shield className="h-5 w-5 text-primary" />
                       <div>
                         <div className="font-medium">Admin</div>

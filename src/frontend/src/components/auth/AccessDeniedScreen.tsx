@@ -18,7 +18,7 @@ export default function AccessDeniedScreen() {
       <Card className="w-full max-w-md border-0 shadow-xl">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <div className="p-3 bg-destructive/10 rounded-full">
+            <div className="p-4 bg-destructive/10 rounded-full">
               <ShieldAlert className="h-12 w-12 text-destructive" />
             </div>
           </div>

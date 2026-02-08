@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 7,
+  "projectStateVersion": 11,
   "summary": "Mobile-first delivery web app (PWA) for \"Bikaner Express Delivery\" with Customer, Rider, and Admin roles; app-like Android feel with bottom navigation, colorful branded UI, and smooth animations. Admin now requires a fully functional, separate /admin panel with username/password login, dashboards, order & rider management, delivery proof enforcement, payments/reports (PDF/Excel export), WhatsApp automation, and business settings (rates/branding).",
   "architectural_notes": [
     "Build as a mobile-first PWA with Android install prompt/support (web app manifest + service worker).",
@@ -15,7 +15,9 @@
     "Plan WhatsApp notifications as an integration point (order assigned -> rider, delivered -> customer); define message templates and triggering events in backend."
   ],
   "known_issues": [
-    "Authentication strategy mismatch: existing plan uses Internet Identity/role-based access, but Admin now requires username/password login at /admin; requires revisiting overall auth architecture."
+    "Authentication strategy mismatch: existing plan uses Internet Identity/role-based access, but Admin now requires username/password login at /admin; requires revisiting overall auth architecture.",
+    "User reports admin URL https://bikaner-express.icp0.io/#/admin still results in \"Canister ID Not Resolved\" even when typed correctly; needs verification of routing/deployment/domain/canister configuration (not just client auto-complete).",
+    "Deployment/build pipeline encountered a deployment error (needs investigation to successfully deploy the app)."
   ],
   "isFixRequest": false,
   "existing_features": [
@@ -202,6 +204,54 @@
         "REQ-26"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-add-an-in-app-user-friendly-way-to-open-the-admin-panel-without-manually-typing-the-url-so-users-can-reliably-reach-the-admin-login-even-when-the-mobile-browser-auto-completes-the-domain-incorrectly",
+      "title": "Add an in-app, user-friendly way to open the Admin Panel without manually typing the URL, so users can reliably reach the Admin Login even when the mobile browser auto-completes the domain incorrectly.",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-an-admin-access-help-screen-that-clearly-guides-users-to-the-correct-domain-and-route-when-they-cannot-open-admin-due-to-a-wrong-hostname-e-g-r-express-icp0-io-leading-to-canister-id-not-resolved",
+      "title": "Implement an Admin access help screen that clearly guides users to the correct domain and route when they cannot open Admin due to a wrong hostname (e.g., \"r-express.icp0.io\" leading to \"Canister ID Not Resolved\").",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-improve-pwa-service-worker-update-behavior-to-ensure-a-rebuild-new-deployment-is-actually-picked-up-by-installed-users-minimizing-cases-where-users-keep-seeing-an-old-broken-build-from-cache",
+      "title": "Improve PWA/service-worker update behavior to ensure a 'rebuild' (new deployment) is actually picked up by installed users, minimizing cases where users keep seeing an old/broken build from cache.",
+      "reqIds": [
+        "REQ-29"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-app-s-visual-design-colors-typography-spacing-surfaces-shadows-and-overall-layout-to-closely-match-the-look-and-feel-of-the-reference-website-at-https-bikaner-express-delivery-08l-caffeine-xyz-using-the-uploaded-screenshots-as-additional-visual-guidance",
+      "title": "Update the app’s visual design (colors, typography, spacing, surfaces, shadows, and overall layout) to closely match the look-and-feel of the reference website at https://bikaner-express-delivery-08l.caffeine.xyz, using the uploaded screenshots as additional visual guidance.",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-refine-the-mobile-ui-patterns-to-match-the-reference-design-including-bottom-navigation-appearance-height-icon-label-sizing-selected-unselected-states-page-padding-around-content-vs-fixed-nav-and-empty-state-presentation-for-lists-e-g-orders-list-empty-state-card",
+      "title": "Refine the mobile UI patterns to match the reference design, including: bottom navigation appearance (height, icon/label sizing, selected/unselected states), page padding around content vs. fixed nav, and empty-state presentation for lists (e.g., orders list empty state card).",
+      "reqIds": [
+        "REQ-31"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-the-design-updates-primarily-via-shared-theme-tokens-and-reusable-styling-tailwind-config-theme-variables-and-shared-layout-wrappers-avoiding-page-by-page-one-off-styling-where-possible",
+      "title": "Implement the design updates primarily via shared theme tokens and reusable styling (Tailwind config/theme variables and shared layout wrappers), avoiding page-by-page one-off styling where possible.",
+      "reqIds": [
+        "REQ-32"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -377,6 +427,12 @@
       "reqIds": [
         "REQ-16"
       ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-34",
+      "summary": "Match the app UI/design closely to the reference website (https://bikaner-express-delivery-08l.caffeine.xyz), i.e., replicate a similar look-and-feel in the app.",
+      "reqIds": [],
       "status": "pending"
     }
   ],

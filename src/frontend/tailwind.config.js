@@ -67,8 +67,11 @@ export default {
             },
             boxShadow: {
                 xs: '0 1px 2px 0 rgba(0,0,0,0.05)',
-                lg: '0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)',
-                xl: '0 20px 35px -10px rgba(0,0,0,0.15), 0 10px 15px -8px rgba(0,0,0,0.1)',
+                sm: '0 1px 3px 0 rgba(0,0,0,0.08)',
+                DEFAULT: '0 2px 8px 0 rgba(0,0,0,0.08)',
+                md: '0 4px 12px 0 rgba(0,0,0,0.1)',
+                lg: '0 8px 20px -4px rgba(0,0,0,0.12)',
+                xl: '0 12px 28px -8px rgba(0,0,0,0.15)',
             },
             keyframes: {
                 'accordion-down': {
@@ -92,11 +95,11 @@ export default {
                 'fab-pulse': {
                     '0%, 100%': { 
                         transform: 'scale(1)',
-                        boxShadow: '0 20px 25px -5px rgba(249, 115, 22, 0.3), 0 8px 10px -6px rgba(249, 115, 22, 0.2)'
+                        boxShadow: '0 8px 16px -4px rgba(0, 0, 0, 0.15)'
                     },
                     '50%': { 
                         transform: 'scale(1.05)',
-                        boxShadow: '0 25px 35px -5px rgba(249, 115, 22, 0.4), 0 10px 15px -6px rgba(249, 115, 22, 0.3)'
+                        boxShadow: '0 12px 24px -4px rgba(0, 0, 0, 0.2)'
                     }
                 }
             },

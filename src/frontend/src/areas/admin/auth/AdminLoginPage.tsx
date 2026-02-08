@@ -43,7 +43,7 @@ export default function AdminLoginPage() {
   return (
     <AppSurface>
       <div className="min-h-screen flex items-center justify-center p-4">
-        <Card className="w-full max-w-md border-0 shadow-2xl">
+        <Card className="w-full max-w-md border shadow-lg">
           <CardHeader className="space-y-1 text-center">
             <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
               <Lock className="h-8 w-8 text-primary" />

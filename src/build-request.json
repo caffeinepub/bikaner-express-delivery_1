@@ -1,265 +1,74 @@
 {
   "kind": "build_request",
-  "title": "Upgrade Admin Panel: /admin password login, full order/rider management, reports, settings, and WhatsApp automation links",
-  "priority": "high",
+  "title": "Match the app UI design to the reference website look-and-feel",
+  "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-15",
-      "text": "Implement a separate Admin authentication flow at URL `/admin` using username + password login, and gate all Admin Panel screens behind this login so there is no public access to admin data or actions.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-20"
-        ],
-        "quotes": [
-          "ADMIN ACCESS:\n- Separate Admin Login URL: /admin\n- Username & Password based secure login\n- Admin role only (no public access)"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Visiting `/#/admin` (or `/admin` depending on router setup) shows an Admin Login form when there is no active admin session.",
-        "Admin Login form requires username and password and provides clear English error messages for invalid credentials.",
-        "After successful login, the Admin UI becomes accessible without requiring Internet Identity.",
-        "All backend methods that power admin-only features validate an admin session (or equivalent backend-enforced admin authentication) and reject unauthenticated callers."
-      ]
-    },
-    {
-      "id": "REQ-16",
-      "text": "Add backend support for Admin credential management suitable for production usage: store admin credentials securely (no plaintext passwords), allow initialization of at least one admin account, and support login + logout with server-verified sessions.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-20"
-        ],
-        "quotes": [
-          "Username & Password based secure login",
-          "This is a real delivery business, not a demo. Admin panel is mandatory."
-        ]
-      },
-      "acceptanceCriteria": [
-        "Backend stores only salted+hashed password material (no plaintext) and can verify logins.",
-        "Backend exposes login/logout APIs that the frontend can call to create and clear an admin session.",
-        "Admin session is required for admin-only APIs (orders list, rider CRUD, settings, reports, etc.).",
-        "Failed logins do not disclose whether the username exists (generic error)."
-      ]
-    },
-    {
-      "id": "REQ-17",
-      "text": "Extend the data model and backend APIs to support full Order Management required by the admin panel: manual order creation by admin and storing the additional order fields (Customer Name, Mobile Number, Pickup Location, Drop Location, Parcel Description, Payment Type: Cash/Online) while preserving existing customer-created order functionality.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-20"
-        ],
-        "quotes": [
-          "ORDER MANAGEMENT:\n- Create new delivery order manually\n- View all orders in table format\n- Order details:\n   - Order ID\n   - Customer Name\n   - Mobile Number\n   - Pickup Location\n   - Drop Location\n   - Parcel Description\n   - Payment Type (Cash / Online)"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Admin can create a new order from the Admin UI and it appears immediately in the Admin orders table.",
-        "Orders include and display the required fields in the Admin order details view.",
-        "Existing customer order creation flow continues to work and produces orders that can be viewed in the Admin panel.",
-        "Backend enforces that only an authenticated admin session can manually create orders."
-      ]
-    },
-    {
-      "id": "REQ-18",
-      "text": "Implement the admin-controlled order status workflow with the exact statuses: New, Assigned, Picked, Delivered; allow status updates from the Admin UI and align existing status values (`pending/assigned/pickedUp/delivered`) to the requested labels in the Admin UI.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-20"
-        ],
-        "quotes": [
-          "Change order status:\n   - New\n   - Assigned\n   - Picked\n   - Delivered"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Admin can update an order status from the order detail screen.",
-        "Status badges/labels in Admin UI show the requested wording (New/Assigned/Picked/Delivered).",
-        "Backend rejects invalid status transitions based on role rules already in place (admin allowed; rider restricted)."
-      ]
-    },
-    {
-      "id": "REQ-19",
-      "text": "Implement a Rider Management module in the Admin Panel: add, edit, and delete riders with fields Name, Phone Number, Vehicle Type (Bike), and use these rider records for assignment instead of requiring manual Principal ID entry.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-20"
-        ],
-        "quotes": [
-          "RIDER MANAGEMENT:\n- Add / Edit / Delete Rider\n- Rider Details:\n   - Name\n   - Phone Number\n   - Vehicle Type (Bike)\n- Assign orders to riders"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Admin UI provides a Riders screen/tab with a riders table/list and Add/Edit/Delete actions.",
-        "Rider record includes Name, Phone Number, and Vehicle Type (Bike).",
-        "Assigning a rider to an order is done by selecting a rider record in the UI (no raw Principal ID required in the normal flow).",
-        "Backend enforces that only authenticated admin sessions can create/update/delete riders and assign riders to orders."
-      ]
-    },
-    {
-      "id": "REQ-20",
-      "text": "Add a 'Track rider location' feature in the Admin Panel by storing a rider-provided Google Maps link (URL) in the backend and rendering it as a clickable link in Admin rider details and/or order details.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-20"
-        ],
-        "quotes": [
-          "Track rider live location (Google Map link)"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Each rider record has an optional field for a Google Maps link (URL).",
-        "Admin UI shows a 'Open in Google Maps' link/button when a rider location link is present.",
-        "The link opens in a new tab/window and is visibly a Google Maps URL.",
-        "If no link is set, UI shows an empty state (e.g., 'No location link provided yet')."
-      ]
-    },
-    {
-      "id": "REQ-21",
-      "text": "Enforce the Delivery Proof System end-to-end: require a delivery proof photo before an order can be marked Delivered, and record an automatic date/time timestamp when the proof photo is uploaded; show the timestamp in the Admin order detail view.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-20"
-        ],
-        "quotes": [
-          "DELIVERY PROOF SYSTEM:\n- Rider must upload delivery photo\n- Auto date & time stamp\n- Order cannot be marked delivered without photo"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Backend rejects any attempt to transition an order to Delivered if no proof photo exists for the order.",
-        "When a proof photo is uploaded, backend stores an upload timestamp.",
-        "Admin order detail view displays the proof photo (existing) and the proof upload date/time (new).",
-        "Rider UI continues to allow proof upload, and 'Mark Delivered' fails with a clear message if proof photo is missing."
-      ]
-    },
-    {
-      "id": "REQ-22",
-      "text": "Implement Admin Dashboard KPIs required by the business: Total Orders (Today/This Month), Pending Deliveries, Completed Deliveries, Active Riders, and Total Earnings (Daily/Monthly).",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-20"
-        ],
-        "quotes": [
-          "ADMIN DASHBOARD:\n- Total Orders (Today / This Month)\n- Pending Deliveries\n- Completed Deliveries\n- Active Riders\n- Total Earnings (Daily & Monthly)"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Admin dashboard shows separate 'Today' and 'This Month' totals for orders.",
-        "Dashboard shows counts for Pending and Completed deliveries based on status.",
-        "Dashboard shows Active Riders count based on riders who currently have at least one Assigned/Picked order (or another clearly-defined rule implemented consistently).",
-        "Dashboard shows Total Earnings (Daily/Monthly) derived from stored order charges/earnings data (admin-entered or rate-calculated)."
-      ]
-    },
-    {
-      "id": "REQ-23",
-      "text": "Add Payments & Reports: track Cash on Delivery vs Online for orders, generate Daily/Weekly/Monthly report views in the Admin Panel, and provide exports as (1) Excel-compatible CSV and (2) printable PDF via browser print-to-PDF.",
+      "id": "REQ-30",
+      "text": "Update the app’s visual design (colors, typography, spacing, surfaces, shadows, and overall layout) to closely match the look-and-feel of the reference website at https://bikaner-express-delivery-08l.caffeine.xyz, using the uploaded screenshots as additional visual guidance.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-20"
+          "msg-2"
         ],
         "quotes": [
-          "PAYMENT & REPORTS:\n- Track Cash on Delivery\n- Daily, Weekly & Monthly reports\n- Export reports in PDF / Excel"
+          "https://bikaner-express-delivery-08l.caffeine.xyz \nYe jo website hai usi prakar app ka design nahi ban sakta kya"
         ]
       },
       "acceptanceCriteria": [
-        "Admin can view report summaries for Daily/Weekly/Monthly time ranges.",
-        "Reports include at minimum: order count, delivered count, totals by payment type, and total earnings for the selected period.",
-        "Admin can export an Excel-compatible file (CSV download).",
-        "Admin can export a PDF via a print-friendly report layout that works with browser 'Print' -> 'Save as PDF'."
+        "The app’s overall styling (background treatment, card style, typography scale, and button styles) is noticeably aligned with the reference website’s aesthetic, rather than the current default look.",
+        "The changes apply consistently across Customer, Rider, and Admin areas (including login/setup screens), without breaking existing flows.",
+        "No user-facing copy is changed away from English as part of this styling update (keep all visible UI text in English)."
       ]
     },
     {
-      "id": "REQ-24",
-      "text": "Add WhatsApp automation as in-app deep links: when an order is assigned, show an Admin action to open WhatsApp with a prefilled message to the rider’s phone number; when an order is delivered, show an Admin action to open WhatsApp with a prefilled message to the customer’s mobile number.",
+      "id": "REQ-31",
+      "text": "Refine the mobile UI patterns to match the reference design, including: bottom navigation appearance (height, icon/label sizing, selected/unselected states), page padding around content vs. fixed nav, and empty-state presentation for lists (e.g., orders list empty state card).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-20"
+          "msg-2"
         ],
         "quotes": [
-          "NOTIFICATIONS:\n- Auto WhatsApp message to rider when order assigned\n- Auto WhatsApp message to customer after delivery\n\nAdd WhatsApp automation:\n- Auto message to rider when order assigned\n- Auto message to customer when delivered"
+          "Ye jo website hai usi prakar app ka design nahi ban sakta kya"
         ]
       },
       "acceptanceCriteria": [
-        "Admin order detail view includes a 'Message Rider on WhatsApp' action when an order is assigned and the assigned rider has a phone number.",
-        "Admin order detail view includes a 'Message Customer on WhatsApp' action when an order is delivered and the order has a customer mobile number.",
-        "Clicking the action opens WhatsApp/WhatsApp Web using the existing deep link strategy (`wa.me`) with a clear, prefilled message that includes at least Order ID, pickup, and drop location.",
-        "If WhatsApp does not open, the existing fallback dialog pattern (copy message) is shown, similar to `WhatsAppOrderAction`."
+        "Customer and Rider bottom navigation bars visually match the intended reference styling (surface color, border/shadow, spacing, and active-state emphasis).",
+        "List empty states (e.g., “No orders yet” card) use a cohesive card style consistent with the updated theme (proper elevation, padding, and readable contrast).",
+        "Content is not obscured by fixed bottom navigation; safe padding remains correct on common Android viewport sizes."
       ]
     },
     {
-      "id": "REQ-25",
-      "text": "Implement Admin Settings: editable Company Name, Company Logo, and Contact Numbers, plus Rate List Management where admin can edit rates at any time and rates are stored in the backend and used for earnings calculations.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-20"
-        ],
-        "quotes": [
-          "SETTINGS:\n- Company Name, Logo, Contact Numbers\n- Rate List Management\n- Admin can edit rates anytime"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Admin UI has a Settings screen where Company Name and Contact Numbers can be edited and saved.",
-        "Admin can upload/update a Company Logo (stored and retrievable) and see a preview in the Settings screen.",
-        "Admin can manage a rate list (create/update/delete rate entries) and changes persist.",
-        "Order earnings/charges reflect the configured rates according to a defined rule implemented in code (and visible in UI on order detail and reports)."
-      ]
-    },
-    {
-      "id": "REQ-26",
-      "text": "Ensure the Admin Panel UI is fully responsive for mobile and desktop, uses the existing brand color tokens/theme, and provides a clean, professional admin layout (navigation, tables/forms, clear hierarchy) without breaking the existing Customer and Rider areas.",
+      "id": "REQ-32",
+      "text": "Implement the design updates primarily via shared theme tokens and reusable styling (Tailwind config/theme variables and shared layout wrappers), avoiding page-by-page one-off styling where possible.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-20"
+          "msg-2"
         ],
         "quotes": [
-          "DESIGN & TECH:\n- Mobile & Desktop responsive\n- Clean professional admin UI\n- Use company brand colors\nAdmin panel must be fully functional and connected with the main website."
+          "https://bikaner-express-delivery-08l.caffeine.xyz"
         ]
       },
       "acceptanceCriteria": [
-        "Admin screens render correctly on narrow mobile widths and typical desktop widths, with no overflow issues in tables/forms.",
-        "Admin navigation makes it easy to access Dashboard, Orders, Riders, Reports, and Settings.",
-        "Existing Customer and Rider routes continue to function and look consistent with the current branded theme.",
-        "All user-facing text added/changed for these features is in English."
+        "Core visual updates are centralized (e.g., via CSS variables/Tailwind theme and shared layout components) so that Customer/Rider/Admin pages inherit the new look consistently.",
+        "No edits are made to any frontend immutable paths listed in SYSTEM_CONTEXT (compose existing UI components instead of modifying them)."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single Motoko actor in `backend/main.mo`; add `backend/migration.mo` only if needed to safely migrate existing stable state when changing stored types.",
-    "Do not edit files under `frontend/src/components/ui` (compose existing UI components instead).",
-    "Do not modify immutable frontend hook files listed in SYSTEM_CONTEXT (e.g., `frontend/src/hooks/useInternetIdentity.ts(x)`, `frontend/src/hooks/useActor.ts`, `frontend/src/main.tsx`).",
-    "No external databases or third-party auth providers; any admin username/password authentication must be implemented within the canister/frontend constraints.",
-    "No real background WhatsApp sending is possible without an external WhatsApp API; implement 'automation' as in-app WhatsApp deep links + fallback copy flow."
+    "Do not modify any files under the frontend immutablePaths listed in SYSTEM_CONTEXT (compose them instead).",
+    "Keep backend behavior and data models unchanged; this request is design/UI only.",
+    "Keep all user-facing UI text in English."
   ],
   "nonGoals": [
-    "Implementing true live GPS tracking or automatic location capture (no geolocation/map SDK integration).",
-    "Sending WhatsApp messages server-to-server via WhatsApp Business APIs (not supported within current platform constraints).",
-    "Adding WebSockets/push notifications for real-time updates."
+    "Implementing new delivery features, new admin capabilities, or changing existing business logic.",
+    "Fixing ICP domain/canister resolution issues (e.g., \"Canister ID Not Resolved\"); this request is only about UI design matching.",
+    "Adding third-party UI frameworks beyond the existing stack."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
-  },
-  "userProfileUpdate": {
-    "goalsToAdd": [
-      "Add a production-ready Admin Panel for Bikaner Express Delivery with username/password login at /admin, complete order & rider management, reports/exports, settings/rates, delivery-proof enforcement, and WhatsApp deep-link messaging flows."
-    ],
-    "goalsToRemove": [],
-    "preferencesToAdd": [
-      "Use English for all user-facing admin UI copy."
-    ],
-    "preferencesToRemove": [],
-    "miscToAdd": [],
-    "miscToRemove": [],
-    "fieldsToSet": {},
-    "fieldsToDelete": []
   }
 }

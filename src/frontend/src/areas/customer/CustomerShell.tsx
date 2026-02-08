@@ -1,21 +1,18 @@
-import { Outlet } from '@tanstack/react-router';
-import CustomerBottomNav from './components/CustomerBottomNav';
+import { useState } from 'react';
 import AppSurface from '../../components/layout/AppSurface';
+import CustomerBottomNav from './components/CustomerBottomNav';
 import CustomerBookDeliveryPage from './pages/CustomerBookDeliveryPage';
 import CustomerOrdersPage from './pages/CustomerOrdersPage';
 import CustomerProfilePage from './pages/CustomerProfilePage';
-import { useState } from 'react';
 
 export default function CustomerShell() {
   const [activeTab, setActiveTab] = useState<'book' | 'orders' | 'profile'>('book');
 
   return (
     <AppSurface>
-      <div className="pb-24">
-        {activeTab === 'book' && <CustomerBookDeliveryPage />}
-        {activeTab === 'orders' && <CustomerOrdersPage />}
-        {activeTab === 'profile' && <CustomerProfilePage />}
-      </div>
+      {activeTab === 'book' && <CustomerBookDeliveryPage />}
+      {activeTab === 'orders' && <CustomerOrdersPage />}
+      {activeTab === 'profile' && <CustomerProfilePage />}
       <CustomerBottomNav activeTab={activeTab} onTabChange={setActiveTab} />
     </AppSurface>
   );

@@ -13,9 +13,9 @@ import Nat "mo:core/Nat";
 import Time "mo:core/Time";
 import List "mo:core/List";
 import Char "mo:core/Char";
-import Migration "migration";
 
-(with migration = Migration.run)
+
+
 actor {
   type OrderId = Text;
   type PhotoId = Text;

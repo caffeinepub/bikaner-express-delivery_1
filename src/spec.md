@@ -1,20 +1,15 @@
 # Specification
 
 ## Summary
-**Goal:** Add a production-ready Admin Panel at `/admin` with secure username/password login and complete admin capabilities for managing orders, riders, reports, settings/rates, delivery proof enforcement, and WhatsApp deep-link messaging.
+**Goal:** Update the app’s UI styling to closely match the look-and-feel of the reference website (https://bikaner-express-delivery-08l.caffeine.xyz), using the uploaded screenshots as visual guidance.
 
 **Planned changes:**
-- Create a separate Admin authentication flow at `/admin` (username + password), require an active admin session to access any admin screens, and enforce admin-only access in backend APIs.
-- Add backend support for secure admin credential storage (salted+hashed), admin initialization, and server-verified login/logout sessions.
-- Extend orders to support admin manual order creation and additional fields (Customer Name, Mobile Number, Pickup Location, Drop Location, Parcel Description, Payment Type: Cash/Online) while preserving existing customer order creation.
-- Implement admin-controlled order status workflow with labels: New, Assigned, Picked, Delivered (mapped from existing internal status values), with admin status update UI.
-- Add Rider Management in the Admin Panel (add/edit/delete) with fields Name, Phone Number, Vehicle Type (Bike), and use rider records for order assignment (no manual Principal ID in normal flow).
-- Add rider location tracking via an optional stored Google Maps link per rider and render as a clickable “Open in Google Maps” action with an empty state when missing.
-- Enforce delivery proof rules: require a proof photo before an order can be marked Delivered, store an automatic proof upload timestamp, and display photo + timestamp in admin order details.
-- Add Admin Dashboard KPIs: Total Orders (Today/This Month), Pending Deliveries, Completed Deliveries, Active Riders, and Total Earnings (Daily/Monthly).
-- Add Payments & Reports screens for Daily/Weekly/Monthly summaries (including payment type totals and earnings) with exports via CSV download and a print-friendly layout for browser PDF.
-- Add WhatsApp automation as in-app deep links: message rider on assignment and message customer on delivery, with a fallback copy-message flow.
-- Add Admin Settings: editable Company Name, Company Logo upload/update, Contact Numbers, and Rate List Management stored in backend and used for earnings calculations.
-- Ensure the Admin Panel is responsive on mobile/desktop, uses existing brand theme/tokens, and does not break existing Customer and Rider areas; all admin copy in English.
+- Introduce/adjust shared design tokens (colors, typography scale, spacing, surface colors, borders/shadows) so the app theme aligns with the reference website aesthetic.
+- Apply the updated theme consistently across Customer, Rider, and Admin areas (including login/setup screens) without changing backend behavior or existing user flows.
+- Refine mobile UI patterns to match the reference styling:
+  - Bottom navigation bar styling (height, icon/label sizing, selected/unselected states, surface/border/shadow).
+  - Page padding/safe-area handling so fixed bottom navigation does not obscure content.
+  - Empty-state presentation for lists (e.g., “No orders yet” card) with cohesive card elevation, padding, and readable contrast.
+- Prefer centralized, reusable styling via shared theme variables/Tailwind config and shared layout wrappers (avoid one-off page-by-page styling where possible), while composing around any immutable frontend paths.
 
-**User-visible outcome:** Admins can visit `/admin`, log in with username/password, and use a responsive admin interface to manage orders and riders, assign deliveries, enforce delivery-proof requirements, view KPIs and reports with exports, configure settings/rates/logo, and open WhatsApp message links for riders/customers.
+**User-visible outcome:** The app’s screens (Customer, Rider, Admin) have a consistent, modern look aligned with the reference website, including updated cards, typography, buttons, bottom navigation, and polished empty states—without changing any visible UI text away from English.

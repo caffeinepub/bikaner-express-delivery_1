@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import AppSurface from '../../components/layout/AppSurface';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 import AdminOrdersPage from './pages/AdminOrdersPage';
@@ -12,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { LayoutDashboard, List, Users, FileText, Settings, LogOut } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import PageContainer from '../../components/layout/PageContainer';
 
 export default function AdminShell() {
   const { isAuthenticated, isLoading, logout } = useAdminAuth();
@@ -21,7 +21,7 @@ export default function AdminShell() {
     return (
       <AppSurface>
         <div className="min-h-screen flex items-center justify-center">
-          <div className="text-white text-lg">Loading...</div>
+          <div className="text-foreground text-lg">Loading...</div>
         </div>
       </AppSurface>
     );
@@ -39,13 +39,13 @@ export default function AdminShell() {
 
   return (
     <AppSurface>
-      <div className="p-4 max-w-6xl mx-auto pb-8">
-        <div className="mb-6 pt-4 flex items-center justify-between">
+      <PageContainer className="py-6">
+        <div className="mb-6 flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-white">Admin Panel</h1>
-            <p className="text-white/80 mt-1">Bikaner Express Delivery Management</p>
+            <h1 className="text-2xl font-bold text-foreground">Admin Panel</h1>
+            <p className="text-muted-foreground mt-1 text-sm">Bikaner Express Delivery Management</p>
           </div>
-          <Button variant="outline" onClick={handleLogout} className="bg-white/10 text-white border-white/20 hover:bg-white/20">
+          <Button variant="outline" onClick={handleLogout} size="sm">
             <LogOut className="mr-2 h-4 w-4" />
             Logout
           </Button>
@@ -91,10 +91,10 @@ export default function AdminShell() {
           </TabsContent>
         </Tabs>
 
-        <div className="text-center text-xs text-white/60 pt-8">
+        <div className="text-center text-xs text-muted-foreground pt-8">
           <p>© 2026. Built with ❤️ using <a href="https://caffeine.ai" target="_blank" rel="noopener noreferrer" className="underline">caffeine.ai</a></p>
         </div>
-      </div>
+      </PageContainer>
     </AppSurface>
   );
 }

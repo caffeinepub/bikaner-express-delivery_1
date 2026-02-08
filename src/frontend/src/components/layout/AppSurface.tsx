@@ -7,7 +7,7 @@ interface AppSurfaceProps {
 
 export default function AppSurface({ children, className }: AppSurfaceProps) {
   return (
-    <div className={cn('min-h-screen app-gradient pb-20', className)}>
+    <div className={cn('min-h-screen app-surface', className)}>
       {children}
     </div>
   );
